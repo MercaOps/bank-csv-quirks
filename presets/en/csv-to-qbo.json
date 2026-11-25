@@ -1,0 +1,164 @@
+{
+  "id": "csv-to-qbo",
+  "lang": "en",
+  "source": "Bank CSV or Excel",
+  "target": "QuickBooks .QBO",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/csv-to-qbo/",
+  "howToExport": [
+    "Sign in to online banking on a computer and open the account's transaction history.",
+    "Choose the date range: a full statement month is easiest to reconcile.",
+    "Choose Download or Export in CSV or Excel (.xlsx/.xls). If the bank offers QuickBooks (.QBO) itself, you can import that directly.",
+    "Drop the file here, compare the totals with your statement, then pick your bank in the .QBO settings."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "auto",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "Status",
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "Pending",
+          "Pendiente",
+          "Reverted",
+          "Declined",
+          "Rechazado"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date",
+        "Transaction Date",
+        "Posting Date",
+        "Booking Date",
+        "Completed Date",
+        "Fecha",
+        "Fecha operación",
+        "Fecha de operación",
+        "Fecha valor",
+        "Fecha movimiento"
+      ],
+      "payee": [
+        "Payee",
+        "Name",
+        "Merchant",
+        "Beneficiario",
+        "Nombre",
+        "Comercio"
+      ],
+      "description": [
+        "Description",
+        "Details",
+        "Narrative",
+        "Memo",
+        "Concepto",
+        "Descripción",
+        "Detalle",
+        "Movimiento"
+      ],
+      "amount": [
+        "Amount",
+        "Net",
+        "Value",
+        "Importe",
+        "Monto",
+        "Valor",
+        "Cantidad"
+      ],
+      "debit": [
+        "Debit",
+        "Withdrawal",
+        "Money Out",
+        "Paid out",
+        "Cargo",
+        "Débito",
+        "Retiro",
+        "Egreso"
+      ],
+      "credit": [
+        "Credit",
+        "Deposit",
+        "Money In",
+        "Paid in",
+        "Abono",
+        "Crédito",
+        "Depósito",
+        "Ingreso"
+      ],
+      "reference": [
+        "Reference",
+        "Ref",
+        "Transaction ID",
+        "Referencia",
+        "Documento",
+        "Nº operación"
+      ],
+      "balance": [
+        "Balance",
+        "Running Balance",
+        "Saldo"
+      ],
+      "currency": [
+        "Currency",
+        "Moneda",
+        "Divisa"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "QuickBooks Desktop checks the file's Intuit bank ID (INTU.BID) against Intuit's list and stops at unknown banks. Pick yours from the list, which comes from Intuit's own Web Connect directory.",
+    "QuickBooks skips a transaction whose FITID it has already imported into the account. The tool gives the same transaction the same ID every time, and two identical charges on one day different IDs.",
+    ".QBO files are declared US-ASCII, so accents and symbols are folded to plain letters; payee names are cut to 32 characters and memos to 255.",
+    "Dates are written at noon GMT, so no time zone can move a transaction to the day before or after."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date / Posting Date",
+      "targetHeader": "<DTPOSTED>",
+      "transformationNote": "Read in the file's date order, written as YYYYMMDD at noon GMT"
+    },
+    {
+      "sourceHeader": "Description / Payee",
+      "targetHeader": "<NAME>",
+      "transformationNote": "First 32 characters, accents folded to ASCII"
+    },
+    {
+      "sourceHeader": "Extra description, reference",
+      "targetHeader": "<MEMO>",
+      "transformationNote": "Up to 255 characters"
+    },
+    {
+      "sourceHeader": "Amount, or Debit + Credit",
+      "targetHeader": "<TRNAMT>, <TRNTYPE>",
+      "transformationNote": "Signed amount; CREDIT for money in, DEBIT for money out"
+    },
+    {
+      "sourceHeader": "(computed)",
+      "targetHeader": "<FITID>",
+      "transformationNote": "Date + 16-character hash of date, amount, payee and memo"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": "qbo",
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/csv-to-qbo.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

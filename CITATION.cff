@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use these notes or data, please credit them as below."
+title: "Bank CSV quirks: how bank and payment exports are really laid out"
+type: dataset
+authors:
+  - name: "MercaOps"
+    website: "https://mercaops.com"
+url: "https://mercaops.com/csv-cleaner/"
+repository-code: "https://github.com/mercaops/bank-csv-quirks"
+license: CC-BY-4.0
+date-released: 2026-11-25
+keywords:
+  - bank statement
+  - CSV
+  - QuickBooks
+  - QBO
+  - IIF
+  - OFX
+  - Xero
+  - bookkeeping

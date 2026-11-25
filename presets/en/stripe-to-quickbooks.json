@@ -1,0 +1,114 @@
+{
+  "id": "stripe-to-quickbooks",
+  "lang": "en",
+  "source": "Stripe",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/stripe-to-quickbooks/",
+  "howToExport": [
+    "In the Stripe Dashboard, open the balance reports and choose the period you're closing.",
+    "Download the itemized balance change CSV (the itemized export, not the summary).",
+    "Keep the default columns or add metadata; the preset reads only what QuickBooks needs. Drop the file above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "created_utc",
+        "Created (UTC)",
+        "created",
+        "Created date (UTC)"
+      ],
+      "description": [
+        "description",
+        "Description"
+      ],
+      "memo": [
+        "reporting_category",
+        "Type",
+        "type"
+      ],
+      "amount": [
+        "net",
+        "Net"
+      ],
+      "reference": [
+        "balance_transaction_id",
+        "id",
+        "source_id",
+        "Source"
+      ],
+      "currency": [
+        "currency",
+        "Currency"
+      ],
+      "gross": [
+        "gross",
+        "Gross",
+        "Amount"
+      ],
+      "fee": [
+        "fee",
+        "Fee"
+      ]
+    },
+    "descriptionFrom": [
+      "description",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "Timestamps are in UTC (2024-04-06 21:47:13), so a late-evening sale in the Americas can land on the next day; the preset keeps the UTC date Stripe reports.",
+    "Each row has gross, fee and net. QuickBooks reconciles against what reaches your Stripe balance, so the preset uses net.",
+    "Payouts to your bank appear as negative rows (reporting category payout): money leaving Stripe that should be matched as a transfer, not an expense.",
+    "Custom metadata can add dozens of columns; none of them are needed for the 3-column upload."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "created_utc",
+      "targetHeader": "Date",
+      "transformationNote": "UTC timestamp → MM/DD/YYYY"
+    },
+    {
+      "sourceHeader": "description",
+      "targetHeader": "Description",
+      "transformationNote": "Charge or invoice description"
+    },
+    {
+      "sourceHeader": "reporting_category",
+      "targetHeader": "Description",
+      "transformationNote": "Appended: «Invoice 1043 – Charge»"
+    },
+    {
+      "sourceHeader": "net",
+      "targetHeader": "Amount",
+      "transformationNote": "Net of Stripe fees; payouts negative"
+    },
+    {
+      "sourceHeader": "gross / fee",
+      "targetHeader": "—",
+      "transformationNote": "Not used in the 3-column format"
+    },
+    {
+      "sourceHeader": "balance_transaction_id / available_on_utc",
+      "targetHeader": "—",
+      "transformationNote": "Dropped"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/stripe-to-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

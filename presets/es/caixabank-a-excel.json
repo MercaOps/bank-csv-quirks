@@ -1,0 +1,83 @@
+{
+  "id": "caixabank-a-excel",
+  "lang": "es",
+  "source": "CaixaBank",
+  "target": "Excel",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/caixabank-a-excel/",
+  "howToExport": [
+    "En CaixaBankNow (web o app), entra en la cuenta y abre el listado de movimientos.",
+    "En el menú de opciones elige descargar o extraer movimientos, el periodo y el formato Excel.",
+    "Guarda el Excel como CSV y suéltalo aquí."
+  ],
+  "file": {
+    "delimiter": ";",
+    "decimalStyle": ",",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Fecha",
+        "Fecha operación"
+      ],
+      "description": [
+        "Concepto"
+      ],
+      "amount": [
+        "Importe"
+      ],
+      "balance": [
+        "Saldo"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Importes y saldos llevan el símbolo € y punto de miles («-1.250,00 €»); al abrirse como texto, Excel no los suma. El ajuste los convierte en números.",
+    "En este listado, Concepto va antes que la fecha; el ajuste reconoce las columnas por su nombre, no por su posición.",
+    "El signo indica la dirección: con menos es un gasto y sin signo un ingreso, y así se mantiene en el archivo limpio.",
+    "La fila de título con el número de cuenta, previa a la tabla, se omite automáticamente."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Concepto",
+      "targetHeader": "Descripción",
+      "transformationNote": "Texto del movimiento"
+    },
+    {
+      "sourceHeader": "Fecha",
+      "targetHeader": "Fecha",
+      "transformationNote": "DD/MM/AAAA"
+    },
+    {
+      "sourceHeader": "Fecha valor",
+      "targetHeader": "—",
+      "transformationNote": "No se usa"
+    },
+    {
+      "sourceHeader": "Importe",
+      "targetHeader": "Importe",
+      "transformationNote": "«-1.250,00 €» → -1250,00"
+    },
+    {
+      "sourceHeader": "Saldo",
+      "targetHeader": "Saldo",
+      "transformationNote": "Número real, sin €"
+    }
+  ],
+  "output": {
+    "profile": "excel-clean",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/caixabank-a-excel.csv",
+    "encoding": "windows-1252",
+    "synthetic": true
+  }
+}

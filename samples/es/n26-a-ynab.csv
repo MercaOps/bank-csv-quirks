@@ -1,0 +1,6 @@
+"Booking Date","Value Date","Partner Name","Partner Iban","Type","Payment Reference","Account Name","Amount (EUR)","Original Amount","Original Currency","Exchange Rate"
+2024-04-01,2024-04-01,"Inmobiliaria Sol S.L.",ES7620770024003102575766,"Outgoing Transfer","Alquiler abril","Cuenta principal",-780.00,,,
+2024-04-02,2024-03-30,"Carrefour Market",,"MasterCard Payment",,"Cuenta principal",-41.25,,,
+2024-04-03,2024-04-03,"Diseños Norte S.L.",ES9121000418450200051332,"Income","Nómina abril","Cuenta principal",2150.00,,,
+2024-04-06,2024-04-05,"Netflix",,"MasterCard Payment",,"Cuenta principal",-12.99,,,
+2024-04-10,2024-04-09,"Vueling",,"MasterCard Payment",,"Cuenta principal",-64.80,,,

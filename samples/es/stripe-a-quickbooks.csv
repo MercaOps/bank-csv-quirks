@@ -1,0 +1,6 @@
+balance_transaction_id,created_utc,available_on_utc,currency,gross,fee,net,reporting_category,source_id,description,customer_email
+txn_3Q2bA1BcdE,2024-04-02 09:12:40,2024-04-09 00:00:00,eur,89.00,1.50,87.50,charge,ch_3Q2bA1BcdE,Factura 2024-118,carmen@example.com
+txn_3Q2bA5FghI,2024-04-03 17:30:02,2024-04-10 00:00:00,eur,29.00,0.66,28.34,charge,ch_3Q2bA5FghI,Suscripción Plan Pro,jordi@example.com
+txn_3Q2bB7JklM,2024-04-05 11:00:00,2024-04-05 11:00:00,eur,-29.00,0.00,-29.00,refund,re_3Q2bB7JklM,Reembolso Suscripción Plan Pro,jordi@example.com
+txn_1Q2bPAYnop,2024-04-09 00:04:00,2024-04-09 00:04:00,eur,-86.84,0.00,-86.84,payout,po_1Q2bPAYnop,STRIPE PAYOUT,
+txn_3Q2bC9QrsT,2024-04-11 22:41:55,2024-04-18 00:00:00,eur,240.00,3.85,236.15,charge,ch_3Q2bC9QrsT,Factura 2024-119,lucia@example.com

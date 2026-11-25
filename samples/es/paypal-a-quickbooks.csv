@@ -1,0 +1,7 @@
+"Fecha","Hora","Zona horaria","Nombre","Tipo","Estado","Divisa","Bruto","Comisión","Neto","Correo electrónico del remitente","Id. de transacción","Saldo"
+"01/04/2024","10:12:44","CEST","Lucía Romero","Pago de comercio electrónico","Completado","EUR","1.250,00","-35,35","1.214,65","lucia@example.com","5UX12345AB678901C","3.214,65"
+"02/04/2024","11:05:10","CEST","","Autorización general","Pendiente","EUR","-20,00","0,00","-20,00","","7HD12345AB678901C","3.214,65"
+"04/04/2024","14:30:00","CEST","Correos Express","Pago preaprobado de factura","Completado","EUR","-12,50","0,00","-12,50","","8KL12345AB678901C","3.202,15"
+"09/04/2024","10:00:00","CEST","","Retirada general","Completado","EUR","-2.000,00","0,00","-2.000,00","","2RS12345AB678901C","1.202,15"
+"12/04/2024","19:41:03","CEST","Marco Bianchi","Pago de comercio electrónico","Completado","EUR","89,90","-3,40","86,50","marco@example.com","3TU12345AB678901C","1.288,65"
+"15/04/2024","09:20:00","CEST","Pablo Ruiz","Pago de comercio electrónico","Denegado","EUR","45,00","0,00","45,00","pablo@example.com","4VW12345AB678901C","1.288,65"

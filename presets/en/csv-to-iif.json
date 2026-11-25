@@ -1,0 +1,164 @@
+{
+  "id": "csv-to-iif",
+  "lang": "en",
+  "source": "Bank CSV, Excel or .QBO",
+  "target": "QuickBooks Desktop .IIF",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/csv-to-iif/",
+  "howToExport": [
+    "Download the statement from your bank as CSV, Excel (.xls/.xlsx), .QBO, .OFX or .QIF: the tool reads all of them.",
+    "Drop it here and check the preview, the totals and the opening and closing balance check.",
+    "Type the exact names of the bank or card account and of the offset accounts, as they appear in your Chart of Accounts.",
+    "Download the 5-row test file first, import it into a backed-up company file, then download the full file."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "auto",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "Status",
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "Pending",
+          "Pendiente",
+          "Reverted",
+          "Declined",
+          "Rechazado"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date",
+        "Transaction Date",
+        "Posting Date",
+        "Booking Date",
+        "Completed Date",
+        "Fecha",
+        "Fecha operación",
+        "Fecha de operación",
+        "Fecha valor",
+        "Fecha movimiento"
+      ],
+      "payee": [
+        "Payee",
+        "Name",
+        "Merchant",
+        "Beneficiario",
+        "Nombre",
+        "Comercio"
+      ],
+      "description": [
+        "Description",
+        "Details",
+        "Narrative",
+        "Memo",
+        "Concepto",
+        "Descripción",
+        "Detalle",
+        "Movimiento"
+      ],
+      "amount": [
+        "Amount",
+        "Net",
+        "Value",
+        "Importe",
+        "Monto",
+        "Valor",
+        "Cantidad"
+      ],
+      "debit": [
+        "Debit",
+        "Withdrawal",
+        "Money Out",
+        "Paid out",
+        "Cargo",
+        "Débito",
+        "Retiro",
+        "Egreso"
+      ],
+      "credit": [
+        "Credit",
+        "Deposit",
+        "Money In",
+        "Paid in",
+        "Abono",
+        "Crédito",
+        "Depósito",
+        "Ingreso"
+      ],
+      "reference": [
+        "Reference",
+        "Ref",
+        "Transaction ID",
+        "Referencia",
+        "Documento",
+        "Nº operación"
+      ],
+      "balance": [
+        "Balance",
+        "Running Balance",
+        "Saldo"
+      ],
+      "currency": [
+        "Currency",
+        "Moneda",
+        "Divisa"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "QuickBooks Desktop has no undo for .IIF imports, and any account name it doesn't recognise is created as a new account: type the names exactly as in your Chart of Accounts.",
+    "Each transaction is a TRNS line plus SPL lines that must add up to zero. The tool checks every transaction to the cent and refuses to create a file that doesn't balance.",
+    "Money out is written as CHECK and money in as DEPOSIT (CREDIT CARD and CCARD REFUND for card accounts), following Intuit's own sample files.",
+    "QuickBooks Desktop 2023 lost its connected services, including bank feeds, on 31 May 2026; .IIF import runs inside QuickBooks and keeps working."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date",
+      "targetHeader": "DATE",
+      "transformationNote": "M/D/YYYY, or D/M/YYYY for UK and Canadian editions"
+    },
+    {
+      "sourceHeader": "Payee / Description",
+      "targetHeader": "NAME",
+      "transformationNote": "Optional: payees can stay in the memo so no new names are added"
+    },
+    {
+      "sourceHeader": "Amount, or Debit + Credit",
+      "targetHeader": "TRNS AMOUNT",
+      "transformationNote": "Signed amount on your bank or card account"
+    },
+    {
+      "sourceHeader": "(same amount, opposite sign)",
+      "targetHeader": "SPL AMOUNT",
+      "transformationNote": "Posted to your offset account so the entry balances"
+    },
+    {
+      "sourceHeader": "Check number (OFX/QIF)",
+      "targetHeader": "DOCNUM",
+      "transformationNote": "Numeric check numbers only"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": "iif",
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/csv-to-iif.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

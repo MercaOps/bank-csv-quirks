@@ -1,0 +1,131 @@
+{
+  "id": "paypal-a-quickbooks",
+  "lang": "es",
+  "source": "PayPal",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/paypal-a-quickbooks/",
+  "howToExport": [
+    "Entra en PayPal desde el navegador y abre la sección de actividad (Historial).",
+    "Pulsa Descargar, elige Personalizado y el rango de fechas (hasta 12 meses por solicitud).",
+    "Selecciona CSV como formato, descarga el informe cuando esté listo y suéltalo aquí."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "auto",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "Estado",
+          "Status"
+        ],
+        "values": [
+          "Pendiente",
+          "Denegado",
+          "Anulado",
+          "Pending",
+          "Denied",
+          "Voided"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Fecha",
+        "Date"
+      ],
+      "payee": [
+        "Nombre",
+        "Name"
+      ],
+      "description": [
+        "Tipo",
+        "Type"
+      ],
+      "amount": [
+        "Neto",
+        "Net"
+      ],
+      "currency": [
+        "Divisa",
+        "Moneda",
+        "Currency"
+      ],
+      "reference": [
+        "Id. de transacción",
+        "Código de transacción",
+        "Transaction ID"
+      ],
+      "balance": [
+        "Saldo",
+        "Balance"
+      ],
+      "gross": [
+        "Gross",
+        "Bruto",
+        "Importe bruto"
+      ],
+      "fee": [
+        "Fee",
+        "Tarifa",
+        "Comisión"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "En cuentas de España y Latinoamérica los importes pueden venir con coma decimal y punto de miles («1.250,00»), que QuickBooks no acepta; el ajuste los escribe como 1250.00.",
+    "Las retenciones y pagos sin liquidar aparecen con Estado «Pendiente»; si se importan, se cuenta dinero que nunca llegó. Se quitan las filas Pendiente, Denegado y Anulado.",
+    "El Bruto incluye la comisión de PayPal y el Neto es lo que llegó a tu saldo; QuickBooks concilia contra el saldo de PayPal, así que se usa el Neto.",
+    "Los encabezados salen en el idioma de tu cuenta; el ajuste reconoce los nombres en español y en inglés."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Fecha",
+      "targetHeader": "Date",
+      "transformationNote": "DD/MM/AAAA"
+    },
+    {
+      "sourceHeader": "Nombre",
+      "targetHeader": "Description",
+      "transformationNote": "Se une con el Tipo: «Lucía Romero – Pago de comercio electrónico»"
+    },
+    {
+      "sourceHeader": "Tipo",
+      "targetHeader": "Description",
+      "transformationNote": "Segunda parte de la descripción"
+    },
+    {
+      "sourceHeader": "Neto",
+      "targetHeader": "Amount",
+      "transformationNote": "Comisión ya descontada; coma decimal → punto"
+    },
+    {
+      "sourceHeader": "Estado",
+      "targetHeader": "—",
+      "transformationNote": "Pendiente, Denegado y Anulado se quitan"
+    },
+    {
+      "sourceHeader": "Bruto / Comisión / Saldo",
+      "targetHeader": "—",
+      "transformationNote": "No forman parte del formato de 3 columnas"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/paypal-a-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

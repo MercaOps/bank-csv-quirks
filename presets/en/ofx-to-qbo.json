@@ -1,0 +1,92 @@
+{
+  "id": "ofx-to-qbo",
+  "lang": "en",
+  "source": "OFX / QFX",
+  "target": "QuickBooks .QBO",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/ofx-to-qbo/",
+  "howToExport": [
+    "In online banking, open the account's activity and choose Download or Export.",
+    "Pick Quicken (.QFX), Microsoft Money or OFX: they're all the same family of format. If QuickBooks (.QBO) is offered, you can import that directly.",
+    "Drop the file here: transactions, account number and ending balance are read from it.",
+    "Choose your bank in the .QBO settings and download."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date"
+      ],
+      "payee": [
+        "Payee"
+      ],
+      "memo": [
+        "Memo"
+      ],
+      "amount": [
+        "Amount"
+      ],
+      "reference": [
+        "Check"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "A .QFX file carries Quicken's bank ID, and Quicken and QuickBooks can use different IDs for the same bank, so pick your bank again for the .QBO file.",
+    "The bank's own transaction IDs (FITID) are kept by default, so QuickBooks still recognises transactions it imported earlier from the bank's own files.",
+    "Dates are read as the calendar day written in the file and never shifted by the time zone the bank adds after them.",
+    "Files declared CHARSET:1252 are read as Windows-1252, and escaped characters such as &amp; are decoded before the .QBO file is written."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "<DTPOSTED>",
+      "targetHeader": "<DTPOSTED>",
+      "transformationNote": "Same calendar day, written at noon GMT"
+    },
+    {
+      "sourceHeader": "<FITID>",
+      "targetHeader": "<FITID>",
+      "transformationNote": "The bank's ID is kept (or regenerated if you untick the option)"
+    },
+    {
+      "sourceHeader": "<NAME> / <MEMO>",
+      "targetHeader": "<NAME> / <MEMO>",
+      "transformationNote": "Folded to ASCII; 32 and 255 characters"
+    },
+    {
+      "sourceHeader": "<TRNAMT>",
+      "targetHeader": "<TRNAMT>",
+      "transformationNote": "Unchanged, with a dot decimal"
+    },
+    {
+      "sourceHeader": "<BANKACCTFROM> / <CCACCTFROM>",
+      "targetHeader": "Account settings",
+      "transformationNote": "Account number and checking, savings or credit-card type carried over"
+    },
+    {
+      "sourceHeader": "<LEDGERBAL>",
+      "targetHeader": "<LEDGERBAL>",
+      "transformationNote": "Ending balance carried over and checked against the transactions"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": "qbo",
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/ofx-to-qbo.qfx",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

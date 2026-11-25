@@ -1,0 +1,128 @@
+{
+  "id": "revolut-to-ynab",
+  "lang": "en",
+  "source": "Revolut",
+  "target": "YNAB",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/revolut-to-ynab/",
+  "howToExport": [
+    "Open Revolut (app or web), select the account you budget with and open its Statement option.",
+    "Choose the spreadsheet format (CSV / Excel) instead of PDF, and the period you want to import.",
+    "Generate and download the file; repeat per month if you keep monthly statements.",
+    "Drop the file (or several months at once) into the tool above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": true,
+    "excludeRows": [
+      {
+        "columns": [
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "PENDING",
+          "REVERTED",
+          "DECLINED",
+          "FAILED",
+          "PENDIENTE",
+          "REVERTIDO",
+          "RECHAZADO",
+          "FALLIDO"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Completed Date",
+        "Fecha de finalización",
+        "Fecha de completado",
+        "Started Date",
+        "Fecha de inicio"
+      ],
+      "description": [
+        "Description",
+        "Descripción"
+      ],
+      "amount": [
+        "Amount",
+        "Importe",
+        "Cantidad"
+      ],
+      "fee": [
+        "Fee",
+        "Comisión",
+        "Tarifa"
+      ],
+      "currency": [
+        "Currency",
+        "Divisa",
+        "Moneda"
+      ],
+      "balance": [
+        "Balance",
+        "Saldo"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Card payments that haven't settled are exported with an empty Completed Date and State PENDING; importing them creates transactions that later change or vanish. The preset drops PENDING, REVERTED, DECLINED and FAILED rows.",
+    "Fees sit in a separate Fee column (for example on currency exchanges), so Amount alone doesn't match your balance. The preset subtracts the fee from each amount.",
+    "One statement can mix currencies: an exchange creates rows in both. A YNAB account holds a single currency, so the most frequent one is kept and you can pick another.",
+    "Dates include the time (2024-03-02 09:15:22); the preset writes plain YYYY-MM-DD dates using the settled Completed Date."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Completed Date",
+      "targetHeader": "Date",
+      "transformationNote": "Time removed; settled date used instead of Started Date"
+    },
+    {
+      "sourceHeader": "Description",
+      "targetHeader": "Payee",
+      "transformationNote": "Merchant or counterparty name, whitespace cleaned"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Outflow / Inflow",
+      "transformationNote": "Negative amounts go to Outflow, positive to Inflow, both written as positive numbers"
+    },
+    {
+      "sourceHeader": "Fee",
+      "targetHeader": "Outflow / Inflow",
+      "transformationNote": "Subtracted from the amount before the split"
+    },
+    {
+      "sourceHeader": "State",
+      "targetHeader": "—",
+      "transformationNote": "PENDING, REVERTED, DECLINED and FAILED rows dropped"
+    },
+    {
+      "sourceHeader": "Currency",
+      "targetHeader": "—",
+      "transformationNote": "Used to keep a single currency per file"
+    },
+    {
+      "sourceHeader": "Type / Product / Balance",
+      "targetHeader": "—",
+      "transformationNote": "Not needed by YNAB"
+    }
+  ],
+  "output": {
+    "profile": "ynab",
+    "accountingFile": null,
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "sample": {
+    "file": "samples/en/revolut-to-ynab.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

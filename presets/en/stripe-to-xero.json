@@ -1,0 +1,112 @@
+{
+  "id": "stripe-to-xero",
+  "lang": "en",
+  "source": "Stripe",
+  "target": "Xero",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/stripe-to-xero/",
+  "howToExport": [
+    "In Stripe, open the balance reports and pick the dates of the Xero period you're reconciling.",
+    "Download the itemized balance change CSV, adding the customer email column if the column picker offers it.",
+    "Drop the file above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "created_utc",
+        "Created (UTC)",
+        "created"
+      ],
+      "payee": [
+        "customer_email",
+        "Customer Email",
+        "customer_name",
+        "Customer Name"
+      ],
+      "description": [
+        "description",
+        "Description"
+      ],
+      "reference": [
+        "source_id",
+        "Source",
+        "id",
+        "balance_transaction_id"
+      ],
+      "amount": [
+        "net",
+        "Net"
+      ],
+      "currency": [
+        "currency",
+        "Currency"
+      ],
+      "gross": [
+        "gross",
+        "Gross",
+        "Amount"
+      ],
+      "fee": [
+        "fee",
+        "Fee"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Xero's statement import has a Payee field but Stripe has no payee column; the customer email (or name) is the closest match and helps invoice matching.",
+    "Source IDs (ch_…, re_…, po_…) tell charges, refunds and payouts apart; in Reference they're searchable in Xero.",
+    "Rows without a customer, such as fees, payouts and adjustments, keep an empty Payee, which Xero accepts."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "created_utc",
+      "targetHeader": "Date",
+      "transformationNote": "UTC timestamp → DD/MM/YYYY"
+    },
+    {
+      "sourceHeader": "net",
+      "targetHeader": "Amount",
+      "transformationNote": "Net of fees; payouts negative"
+    },
+    {
+      "sourceHeader": "customer_email",
+      "targetHeader": "Payee",
+      "transformationNote": "Customer contact for invoice matching"
+    },
+    {
+      "sourceHeader": "description",
+      "targetHeader": "Description",
+      "transformationNote": "Stripe's description"
+    },
+    {
+      "sourceHeader": "source_id",
+      "targetHeader": "Reference",
+      "transformationNote": "ch_ / re_ / po_ identifier"
+    },
+    {
+      "sourceHeader": "gross / fee / available_on_utc",
+      "targetHeader": "—",
+      "transformationNote": "Dropped"
+    }
+  ],
+  "output": {
+    "profile": "xero",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/stripe-to-xero.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "id": "revolut-a-ynab",
+  "lang": "es",
+  "source": "Revolut",
+  "target": "YNAB",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/revolut-a-ynab/",
+  "howToExport": [
+    "Abre Revolut (app o web), elige la cuenta con la que haces el presupuesto y entra en su opción de Extracto.",
+    "Elige el formato de hoja de cálculo (CSV / Excel) en lugar de PDF y el periodo que quieres importar.",
+    "Genera y descarga el archivo; repítelo por cada mes si guardas extractos mensuales.",
+    "Suelta el archivo (o varios meses a la vez) en la herramienta de arriba."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": true,
+    "excludeRows": [
+      {
+        "columns": [
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "PENDING",
+          "REVERTED",
+          "DECLINED",
+          "FAILED",
+          "PENDIENTE",
+          "REVERTIDO",
+          "RECHAZADO",
+          "FALLIDO"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Completed Date",
+        "Fecha de finalización",
+        "Fecha de completado",
+        "Started Date",
+        "Fecha de inicio"
+      ],
+      "description": [
+        "Description",
+        "Descripción"
+      ],
+      "amount": [
+        "Amount",
+        "Importe",
+        "Cantidad"
+      ],
+      "fee": [
+        "Fee",
+        "Comisión",
+        "Tarifa"
+      ],
+      "currency": [
+        "Currency",
+        "Divisa",
+        "Moneda"
+      ],
+      "balance": [
+        "Balance",
+        "Saldo"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Los pagos con tarjeta aún no liquidados se exportan con la columna Completed Date vacía y State PENDING; si se importan, crean movimientos que luego cambian o desaparecen. El ajuste quita las filas PENDING, REVERTED, DECLINED y FAILED.",
+    "Las comisiones van en una columna Fee aparte (por ejemplo, en los cambios de divisa), así que Amount por sí sola no cuadra con tu saldo. El ajuste resta la comisión de cada importe.",
+    "Un mismo extracto puede mezclar monedas: un cambio de divisa crea filas en ambas. Una cuenta de YNAB solo admite una moneda, así que se conserva la más frecuente y puedes elegir otra.",
+    "Si tu exportación sale con los encabezados traducidos (Fecha de finalización, Descripción, Importe, Comisión…), el ajuste también los reconoce."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Completed Date",
+      "targetHeader": "Date",
+      "transformationNote": "Se quita la hora y se usa la fecha de liquidación en lugar de Started Date"
+    },
+    {
+      "sourceHeader": "Description",
+      "targetHeader": "Payee",
+      "transformationNote": "Nombre del comercio o de la contraparte, sin espacios sobrantes"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Outflow / Inflow",
+      "transformationNote": "Los importes negativos van a Outflow y los positivos a Inflow, ambos en positivo"
+    },
+    {
+      "sourceHeader": "Fee",
+      "targetHeader": "Outflow / Inflow",
+      "transformationNote": "Se resta del importe antes de separarlo"
+    },
+    {
+      "sourceHeader": "State",
+      "targetHeader": "—",
+      "transformationNote": "Se quitan las filas PENDING, REVERTED, DECLINED y FAILED"
+    },
+    {
+      "sourceHeader": "Currency",
+      "targetHeader": "—",
+      "transformationNote": "Sirve para dejar una sola moneda por archivo"
+    },
+    {
+      "sourceHeader": "Type / Product / Balance",
+      "targetHeader": "—",
+      "transformationNote": "YNAB no los necesita"
+    }
+  ],
+  "output": {
+    "profile": "ynab",
+    "accountingFile": null,
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "sample": {
+    "file": "samples/es/revolut-a-ynab.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

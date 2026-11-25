@@ -1,0 +1,6 @@
+"TransferWise ID",Date,Amount,Currency,Description,"Payment Reference","Running Balance","Exchange From","Exchange To","Exchange Rate","Payer Name","Payee Name","Payee Account Number",Merchant,"Total fees"
+TRANSFER-982001234,2024-05-02,-2300.00,EUR,"Sent money to Nordlicht Design GmbH","Invoice ND-118",9700.00,,,,,"Nordlicht Design GmbH",DE89370400440532013000,,0.00
+TRANSFER-982001777,2024-05-03,5600.00,EUR,"Received money from Brightwave Ltd with reference INV-2205","INV-2205",15300.00,GBP,EUR,1.1667,"Brightwave Ltd",,,,0.00
+CARD-1133557799,2024-05-06,-89.00,EUR,"Card transaction of 89.00 EUR issued by Notion Labs",,15211.00,,,,,,,"Notion Labs",0.00
+FEE-445566,2024-05-07,-4.13,EUR,"Wise fee for transfer 982001234",,15206.87,,,,,,,,4.13
+TRANSFER-982004321,2024-05-09,1250.00,EUR,"Received money from Atelier Rouge SARL with reference F-2024-77","F-2024-77",16456.87,,,,"Atelier Rouge SARL",,,,0.00

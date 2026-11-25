@@ -1,0 +1,124 @@
+{
+  "id": "paypal-to-quickbooks",
+  "lang": "en",
+  "source": "PayPal",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/paypal-to-quickbooks/",
+  "howToExport": [
+    "Log in to PayPal on the web and go to Activity.",
+    "Click the Download icon and choose Custom; pick the date range (one request covers up to 12 months).",
+    "Select CSV as the format and keep the default fields (Date, Name, Type, Status, Currency, Gross, Fee, Net, Balance…).",
+    "Download the report once PayPal says it's ready (large ones take a while), then add it above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "MDY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "Status"
+        ],
+        "values": [
+          "Pending",
+          "Denied",
+          "Voided"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date"
+      ],
+      "payee": [
+        "Name"
+      ],
+      "description": [
+        "Type"
+      ],
+      "amount": [
+        "Net"
+      ],
+      "currency": [
+        "Currency"
+      ],
+      "reference": [
+        "Transaction ID"
+      ],
+      "balance": [
+        "Balance"
+      ],
+      "gross": [
+        "Gross",
+        "Bruto",
+        "Importe bruto"
+      ],
+      "fee": [
+        "Fee",
+        "Tarifa",
+        "Comisión"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Authorization holds and unsettled payments appear with Status «Pending»; importing them counts money that never settled. The preset drops Pending, Denied and Voided rows.",
+    "Gross is the amount before PayPal's fee and Net is what reached your balance. QuickBooks reconciles against the PayPal balance, so the preset uses Net.",
+    "Amounts are quoted and carry thousands separators (\"1,250.00\"), which trips up QuickBooks' upload. The preset writes plain 1250.00.",
+    "Multi-currency payments add rows in each currency; the cleaner keeps one currency per file so the QuickBooks PayPal account stays consistent."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date",
+      "targetHeader": "Date",
+      "transformationNote": "Kept as MM/DD/YYYY (switch to DD/MM/YYYY for QuickBooks outside the US)"
+    },
+    {
+      "sourceHeader": "Name",
+      "targetHeader": "Description",
+      "transformationNote": "Joined with Type: «Jane Buyer – Express Checkout Payment»"
+    },
+    {
+      "sourceHeader": "Type",
+      "targetHeader": "Description",
+      "transformationNote": "Second half of the description"
+    },
+    {
+      "sourceHeader": "Net",
+      "targetHeader": "Amount",
+      "transformationNote": "Fee already deducted; thousands separators removed; money out stays negative"
+    },
+    {
+      "sourceHeader": "Status",
+      "targetHeader": "—",
+      "transformationNote": "Pending, Denied and Voided rows dropped"
+    },
+    {
+      "sourceHeader": "Gross / Fee",
+      "targetHeader": "—",
+      "transformationNote": "Not needed: Net already includes the fee"
+    },
+    {
+      "sourceHeader": "Time / TimeZone / Transaction ID",
+      "targetHeader": "—",
+      "transformationNote": "Not used by QuickBooks' 3-column format"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/paypal-to-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "id": "csv-a-qbo",
+  "lang": "es",
+  "source": "CSV o Excel del banco",
+  "target": "QuickBooks .QBO",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/csv-a-qbo/",
+  "howToExport": [
+    "Entra en la banca online desde el ordenador y abre los movimientos de la cuenta.",
+    "Elige el periodo: un mes completo de extracto es lo más fácil de conciliar.",
+    "Descarga en CSV o Excel (.xlsx/.xls). Si el banco ofrece QuickBooks (.QBO), puedes importarlo directamente.",
+    "Suelta el archivo aquí, compara los totales con tu extracto y elige tu banco en los ajustes del .QBO."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "auto",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "Status",
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "Pending",
+          "Pendiente",
+          "Reverted",
+          "Declined",
+          "Rechazado"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date",
+        "Transaction Date",
+        "Posting Date",
+        "Booking Date",
+        "Completed Date",
+        "Fecha",
+        "Fecha operación",
+        "Fecha de operación",
+        "Fecha valor",
+        "Fecha movimiento"
+      ],
+      "payee": [
+        "Payee",
+        "Name",
+        "Merchant",
+        "Beneficiario",
+        "Nombre",
+        "Comercio"
+      ],
+      "description": [
+        "Description",
+        "Details",
+        "Narrative",
+        "Memo",
+        "Concepto",
+        "Descripción",
+        "Detalle",
+        "Movimiento"
+      ],
+      "amount": [
+        "Amount",
+        "Net",
+        "Value",
+        "Importe",
+        "Monto",
+        "Valor",
+        "Cantidad"
+      ],
+      "debit": [
+        "Debit",
+        "Withdrawal",
+        "Money Out",
+        "Paid out",
+        "Cargo",
+        "Débito",
+        "Retiro",
+        "Egreso"
+      ],
+      "credit": [
+        "Credit",
+        "Deposit",
+        "Money In",
+        "Paid in",
+        "Abono",
+        "Crédito",
+        "Depósito",
+        "Ingreso"
+      ],
+      "reference": [
+        "Reference",
+        "Ref",
+        "Transaction ID",
+        "Referencia",
+        "Documento",
+        "Nº operación"
+      ],
+      "balance": [
+        "Balance",
+        "Running Balance",
+        "Saldo"
+      ],
+      "currency": [
+        "Currency",
+        "Moneda",
+        "Divisa"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "QuickBooks Desktop comprueba el ID de banco de Intuit (INTU.BID) del archivo y se detiene con bancos desconocidos. Elige el tuyo de la lista, que sale del directorio Web Connect de la propia Intuit.",
+    "QuickBooks omite un movimiento cuyo FITID ya importó en esa cuenta. La herramienta da siempre el mismo ID al mismo movimiento, e ID distintos a dos cargos idénticos del mismo día.",
+    "Los .QBO se declaran US-ASCII, así que tildes y símbolos se convierten a letras simples («Nómina» → «Nomina»); el beneficiario se corta a 32 caracteres y el concepto a 255.",
+    "Los importes con coma decimal y punto de miles (1.234,56) se leen bien y se escriben con punto, como exige el formato."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Fecha",
+      "targetHeader": "<DTPOSTED>",
+      "transformationNote": "DD/MM/AAAA leído tal cual, escrito como AAAAMMDD a mediodía GMT"
+    },
+    {
+      "sourceHeader": "Concepto / Beneficiario",
+      "targetHeader": "<NAME>",
+      "transformationNote": "Primeros 32 caracteres, sin tildes"
+    },
+    {
+      "sourceHeader": "Resto del concepto, referencia",
+      "targetHeader": "<MEMO>",
+      "transformationNote": "Hasta 255 caracteres"
+    },
+    {
+      "sourceHeader": "Importe, o Cargo + Abono",
+      "targetHeader": "<TRNAMT>, <TRNTYPE>",
+      "transformationNote": "Importe con signo y punto decimal; CREDIT entradas, DEBIT salidas"
+    },
+    {
+      "sourceHeader": "(calculado)",
+      "targetHeader": "<FITID>",
+      "transformationNote": "Fecha + hash de 16 caracteres de fecha, importe, beneficiario y concepto"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": "qbo",
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/csv-a-qbo.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

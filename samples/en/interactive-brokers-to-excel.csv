@@ -1,0 +1,23 @@
+Statement,Header,Field Name,Field Value
+Statement,Data,BrokerName,Interactive Brokers LLC
+Statement,Data,Period,"January 1, 2024 - March 31, 2024"
+Account Information,Header,Field Name,Field Value
+Account Information,Data,Base Currency,USD
+Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,C. Price,Proceeds,Comm/Fee,Basis,Realized P/L,Code
+Trades,Data,Order,Stocks,USD,AAPL,"2024-01-15, 10:30:01",10,185.50,185.92,-1855,-1,1856,0,O
+Trades,Data,Order,Stocks,USD,MSFT,"2024-02-20, 15:59:58",-5,405.20,404.88,2026,-1.02,-1850.5,174.48,C
+Trades,Data,ClosedLot,Stocks,USD,MSFT,2024-01-03,5,370.10,,,,1850.5,,
+Trades,SubTotal,,Stocks,USD,MSFT,,-5,,,2026,-1.02,-1850.5,174.48,
+Trades,Data,Order,Stocks,USD,VOO,"2024-03-05, 09:31:13",4,470.25,471.10,-1881,-1,1882,0,O
+Trades,Data,Order,Stocks,USD,NVDA,"2024-03-28, 14:02:47",2,903.10,902.50,-1806.2,-1,1807.2,0,O
+Trades,Total,,Stocks,USD,,,,,,-3516.2,-4.02,,174.48,
+Dividends,Header,Currency,Date,Description,Amount
+Dividends,Data,USD,2024-02-15,AAPL(US0378331005) Cash Dividend USD 0.24 per Share (Ordinary Dividend),2.4
+Dividends,Data,USD,2024-03-28,VOO(US9229083632) Cash Dividend USD 1.5429 per Share (Ordinary Dividend),6.17
+Dividends,Data,USD,2024-03-14,MSFT(US5949181045) Cash Dividend USD 0.75 per Share (Ordinary Dividend),3.75
+Dividends,Data,Total,,,12.32
+Withholding Tax,Header,Currency,Date,Description,Amount,Code
+Withholding Tax,Data,USD,2024-02-15,AAPL(US0378331005) Cash Dividend USD 0.24 per Share - US Tax,-0.36,
+Withholding Tax,Data,USD,2024-03-28,VOO(US9229083632) Cash Dividend USD 1.5429 per Share - US Tax,-0.93,
+Withholding Tax,Data,USD,2024-03-14,MSFT(US5949181045) Cash Dividend USD 0.75 per Share - US Tax,-0.56,
+Withholding Tax,Data,Total,,,-1.85,

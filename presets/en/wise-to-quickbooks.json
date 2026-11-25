@@ -1,0 +1,108 @@
+{
+  "id": "wise-to-quickbooks",
+  "lang": "en",
+  "source": "Wise",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/wise-to-quickbooks/",
+  "howToExport": [
+    "In Wise, open the currency balance you want to import and go to its statements.",
+    "Choose the period and CSV as the file type; business accounts may add extra columns, which the preset ignores.",
+    "Download one file per currency balance and drop it above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date",
+        "Fecha"
+      ],
+      "payee": [
+        "Merchant",
+        "Payee Name",
+        "Payer Name"
+      ],
+      "memo": [
+        "Payment Reference",
+        "Reference"
+      ],
+      "description": [
+        "Description"
+      ],
+      "amount": [
+        "Amount"
+      ],
+      "reference": [
+        "TransferWise ID"
+      ],
+      "currency": [
+        "Currency"
+      ],
+      "balance": [
+        "Running Balance"
+      ],
+      "fee": [
+        "Total fees",
+        "Comisiones totales"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "Every row carries conversion metadata (Exchange From, Exchange To, Exchange Rate) that QuickBooks' 3-column upload can't take; it is dropped.",
+    "The counterparty sits in a different column depending on direction: Payee Name for money out, Payer Name for money in, Merchant for card spend. The preset reads whichever is filled on each row.",
+    "Wise's Description («Card transaction of 18.40 GBP issued by…») repeats the amount; counterparty plus payment reference makes a steadier QuickBooks description, with the original as fallback.",
+    "Each statement covers one currency balance, so it belongs in a QuickBooks account in that same currency."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date",
+      "targetHeader": "Date",
+      "transformationNote": "MM/DD/YYYY for US companies (DD/MM/YYYY elsewhere)"
+    },
+    {
+      "sourceHeader": "Merchant / Payee Name / Payer Name",
+      "targetHeader": "Description",
+      "transformationNote": "First non-empty counterparty on each row"
+    },
+    {
+      "sourceHeader": "Payment Reference",
+      "targetHeader": "Description",
+      "transformationNote": "Appended: «Acme GmbH – INV-1043»"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Amount",
+      "transformationNote": "Signed amount with dot decimals"
+    },
+    {
+      "sourceHeader": "Exchange From / To / Rate",
+      "targetHeader": "—",
+      "transformationNote": "Dropped: not accepted by QuickBooks"
+    },
+    {
+      "sourceHeader": "TransferWise ID / Running Balance",
+      "targetHeader": "—",
+      "transformationNote": "Not part of the 3-column format"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/wise-to-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

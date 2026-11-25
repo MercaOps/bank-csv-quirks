@@ -1,0 +1,112 @@
+{
+  "id": "bancolombia-a-excel",
+  "lang": "es",
+  "source": "Bancolombia",
+  "target": "Excel",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/bancolombia-a-excel/",
+  "howToExport": [
+    "Entra en la Sucursal Virtual Personas de Bancolombia y abre la cuenta desde la sección de saldos y movimientos o de documentos.",
+    "Elige el periodo y pulsa Descargar en formato XLS (Excel); el PDF no sirve para importar.",
+    "Suelta el XLS aquí tal cual: no hace falta abrirlo en Excel ni guardarlo como CSV.",
+    "Puedes añadir varios meses a la vez, en XLS o en CSV."
+  ],
+  "file": {
+    "delimiter": ";",
+    "decimalStyle": ",",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Fecha",
+        "Fecha movimiento",
+        "Fecha transacción"
+      ],
+      "description": [
+        "Descripción",
+        "Descripcion",
+        "Concepto",
+        "Detalle"
+      ],
+      "reference": [
+        "Referencia",
+        "Documento",
+        "Dcto.",
+        "Número de documento"
+      ],
+      "amount": [
+        "Valor",
+        "Valor transacción",
+        "Monto"
+      ],
+      "debit": [
+        "Débito",
+        "Debito",
+        "Retiros"
+      ],
+      "credit": [
+        "Crédito",
+        "Credito",
+        "Consignaciones"
+      ],
+      "balance": [
+        "Saldo",
+        "Saldo disponible"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Si guardas el XLS como CSV desde un Excel en español, sale con punto y coma y en ANSI (Windows-1252): «DESCRIPCIÓN» aparece como «DESCRIPCI�N» en otros programas. Con el XLS original no pasa, y con el CSV el ajuste recupera las tildes.",
+    "Los valores usan punto de miles y coma decimal (-185.430,00). El limpiador los convierte en números reales y los devuelve con coma decimal para un Excel en español.",
+    "Antes de la tabla hay filas con el banco, el número de cuenta y el periodo, y al final una fila de saldo; el ajuste encuentra el encabezado solo y omite esas filas.",
+    "Si pegas varios periodos en un mismo archivo, el encabezado se repite a mitad de la tabla; esas filas de encabezado repetidas se quitan."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "FECHA",
+      "targetHeader": "Fecha",
+      "transformationNote": "DD/MM/AAAA, sin hora ni día de la semana"
+    },
+    {
+      "sourceHeader": "DESCRIPCIÓN",
+      "targetHeader": "Descripción",
+      "transformationNote": "Tildes recuperadas y espacios sobrantes eliminados"
+    },
+    {
+      "sourceHeader": "REFERENCIA",
+      "targetHeader": "Referencia",
+      "transformationNote": "Se conserva tal cual"
+    },
+    {
+      "sourceHeader": "VALOR",
+      "targetHeader": "Importe",
+      "transformationNote": "-185.430,00 → -185430,00 (número real para Excel)"
+    },
+    {
+      "sourceHeader": "SALDO",
+      "targetHeader": "Saldo",
+      "transformationNote": "Mismo formato numérico que el importe"
+    },
+    {
+      "sourceHeader": "SUCURSAL",
+      "targetHeader": "—",
+      "transformationNote": "No se usa en el archivo limpio"
+    }
+  ],
+  "output": {
+    "profile": "excel-clean",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/bancolombia-a-excel.csv",
+    "encoding": "windows-1252",
+    "synthetic": true
+  }
+}

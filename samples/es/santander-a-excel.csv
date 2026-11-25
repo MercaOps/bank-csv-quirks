@@ -1,0 +1,10 @@
+Movimientos de cuenta;;;;
+Cuenta: ES21 0049 **** **** **** 5678;;;;
+Desde 01/04/2024 hasta 30/04/2024;;;;
+Fecha operación;Fecha valor;Concepto;Importe;Saldo
+29/04/2024;29/04/2024;Transferencia recibida de Ana Martín;350,00 EUR;3.912,45 EUR
+25/04/2024;25/04/2024;Pago tarjeta El Corte Inglés;-129,90 EUR;3.562,45 EUR
+15/04/2024;15/04/2024;Recibo Movistar;-45,00 EUR;3.692,35 EUR
+03/04/2024;03/04/2024;Compra Amazon Marketplace;-23,99 EUR;3.737,35 EUR
+01/04/2024;01/04/2024;Nómina;1.950,00 EUR;3.761,34 EUR
+Saldo final;;;;3.912,45 EUR

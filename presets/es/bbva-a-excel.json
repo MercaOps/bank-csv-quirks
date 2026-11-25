@@ -1,0 +1,94 @@
+{
+  "id": "bbva-a-excel",
+  "lang": "es",
+  "source": "BBVA",
+  "target": "Excel",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/bbva-a-excel/",
+  "howToExport": [
+    "En la web o la app de BBVA, abre la cuenta y entra en sus movimientos.",
+    "Filtra el periodo que necesitas y usa la opción de descargar en Excel.",
+    "Suelta aquí el Excel tal cual: no hace falta guardarlo como CSV.",
+    "Si ya lo tienes en CSV, también sirve."
+  ],
+  "file": {
+    "delimiter": ";",
+    "decimalStyle": ",",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Fecha",
+        "Fecha operación"
+      ],
+      "description": [
+        "Concepto"
+      ],
+      "memo": [
+        "Observaciones"
+      ],
+      "amount": [
+        "Importe"
+      ],
+      "balance": [
+        "Disponible",
+        "Saldo"
+      ]
+    },
+    "descriptionFrom": [
+      "description",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "La exportación incluye dos fechas: la de operación y la F. Valor (cuando el importe se hace efectivo). Para conciliar gastos se usa la de operación.",
+    "El detalle útil suele repartirse entre Concepto y Observaciones (por ejemplo, el comercio y la tarjeta); el ajuste los une con un guion.",
+    "Antes de la tabla aparecen filas con el titular, la cuenta y el periodo, que rompen cualquier importación; se omiten solas.",
+    "Si lo guardas como CSV, un Excel en español usa punto y coma, coma decimal y codificación ANSI; el limpiador lee igual ese CSV que el Excel original."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Fecha",
+      "targetHeader": "Fecha",
+      "transformationNote": "Fecha de operación, DD/MM/AAAA"
+    },
+    {
+      "sourceHeader": "F.Valor",
+      "targetHeader": "—",
+      "transformationNote": "No se usa"
+    },
+    {
+      "sourceHeader": "Concepto",
+      "targetHeader": "Descripción",
+      "transformationNote": "Primera parte de la descripción"
+    },
+    {
+      "sourceHeader": "Observaciones",
+      "targetHeader": "Descripción",
+      "transformationNote": "Se añade: «Mercadona – Tarjeta 4940 **** 1234»"
+    },
+    {
+      "sourceHeader": "Importe",
+      "targetHeader": "Importe",
+      "transformationNote": "1.250,40 → 1250,40 como número real"
+    },
+    {
+      "sourceHeader": "Disponible",
+      "targetHeader": "Saldo",
+      "transformationNote": "Saldo tras cada movimiento"
+    }
+  ],
+  "output": {
+    "profile": "excel-clean",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/bbva-a-excel.csv",
+    "encoding": "windows-1252",
+    "synthetic": true
+  }
+}

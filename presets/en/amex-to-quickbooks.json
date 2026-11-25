@@ -1,0 +1,88 @@
+{
+  "id": "amex-to-quickbooks",
+  "lang": "en",
+  "source": "American Express",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/amex-to-quickbooks/",
+  "howToExport": [
+    "Log in to americanexpress.com and open the card's statements and activity.",
+    "Pick a statement period or a custom date range and choose Download.",
+    "Select CSV as the format (additional transaction details, if offered, are ignored) and drop the file above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "MDY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": true,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date"
+      ],
+      "description": [
+        "Description",
+        "Appears On Your Statement As"
+      ],
+      "reference": [
+        "Reference"
+      ],
+      "amount": [
+        "Amount"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Amex lists charges as positive numbers and payments as negative, the opposite of what QuickBooks expects for a card upload, so purchases land as money received. The preset inverts every sign.",
+    "Extended Details and City/State are multi-line fields inside quotes; some spreadsheet tools split them into extra rows. The preset parses them correctly and leaves them out.",
+    "The Category column is Amex's own classification and isn't accepted by QuickBooks' 3-column import.",
+    "Dates are MM/DD/YYYY; QuickBooks companies outside the US need DD/MM/YYYY."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date",
+      "targetHeader": "Date",
+      "transformationNote": "MM/DD/YYYY"
+    },
+    {
+      "sourceHeader": "Description",
+      "targetHeader": "Description",
+      "transformationNote": "Merchant as shown on the statement"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Amount",
+      "transformationNote": "Sign inverted: charges negative, payments positive"
+    },
+    {
+      "sourceHeader": "Extended Details",
+      "targetHeader": "—",
+      "transformationNote": "Multi-line field dropped"
+    },
+    {
+      "sourceHeader": "Address / City/State / Zip Code / Country",
+      "targetHeader": "—",
+      "transformationNote": "Dropped"
+    },
+    {
+      "sourceHeader": "Category / Reference",
+      "targetHeader": "—",
+      "transformationNote": "Not part of the 3-column format"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/amex-to-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

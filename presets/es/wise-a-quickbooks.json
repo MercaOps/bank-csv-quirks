@@ -1,0 +1,108 @@
+{
+  "id": "wise-a-quickbooks",
+  "lang": "es",
+  "source": "Wise",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/wise-a-quickbooks/",
+  "howToExport": [
+    "En Wise, abre el saldo de la divisa que quieres importar y ve a sus extractos.",
+    "Elige el periodo y CSV como tipo de archivo; las cuentas de empresa pueden añadir columnas extra, que el ajuste ignora.",
+    "Descarga un archivo por cada saldo de divisa y suéltalo aquí."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date",
+        "Fecha"
+      ],
+      "payee": [
+        "Merchant",
+        "Payee Name",
+        "Payer Name"
+      ],
+      "memo": [
+        "Payment Reference",
+        "Reference"
+      ],
+      "description": [
+        "Description"
+      ],
+      "amount": [
+        "Amount"
+      ],
+      "reference": [
+        "TransferWise ID"
+      ],
+      "currency": [
+        "Currency"
+      ],
+      "balance": [
+        "Running Balance"
+      ],
+      "fee": [
+        "Total fees",
+        "Comisiones totales"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "Cada fila trae datos de conversión (Exchange From, Exchange To, Exchange Rate) que la carga de 3 columnas de QuickBooks no admite; se eliminan.",
+    "La contraparte está en una columna distinta según la dirección: Payee Name en pagos, Payer Name en cobros y Merchant en compras con tarjeta. El ajuste lee la que esté rellena en cada fila.",
+    "La Description de Wise («Card transaction of 32.60 EUR issued by…») repite el importe; contraparte más referencia da una descripción más estable, con la original como respaldo.",
+    "Cada extracto corresponde a un saldo en una divisa, así que va a una cuenta de QuickBooks en esa misma divisa."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date",
+      "targetHeader": "Date",
+      "transformationNote": "DD/MM/AAAA (MM/DD/YYYY para empresas de EE. UU.)"
+    },
+    {
+      "sourceHeader": "Merchant / Payee Name / Payer Name",
+      "targetHeader": "Description",
+      "transformationNote": "Primera contraparte no vacía de cada fila"
+    },
+    {
+      "sourceHeader": "Payment Reference",
+      "targetHeader": "Description",
+      "transformationNote": "Se añade: «Studio Lumen – FAC-2024-031»"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Amount",
+      "transformationNote": "Importe con signo y punto decimal"
+    },
+    {
+      "sourceHeader": "Exchange From / To / Rate",
+      "targetHeader": "—",
+      "transformationNote": "Se eliminan: QuickBooks no los admite"
+    },
+    {
+      "sourceHeader": "TransferWise ID / Running Balance",
+      "targetHeader": "—",
+      "transformationNote": "No forman parte del formato de 3 columnas"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/wise-a-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

@@ -1,0 +1,3256 @@
+[
+  {
+    "id": "amex-to-quickbooks",
+    "lang": "en",
+    "source": "American Express",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/amex-to-quickbooks/",
+    "howToExport": [
+      "Log in to americanexpress.com and open the card's statements and activity.",
+      "Pick a statement period or a custom date range and choose Download.",
+      "Select CSV as the format (additional transaction details, if offered, are ignored) and drop the file above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "MDY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": true,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date"
+        ],
+        "description": [
+          "Description",
+          "Appears On Your Statement As"
+        ],
+        "reference": [
+          "Reference"
+        ],
+        "amount": [
+          "Amount"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Amex lists charges as positive numbers and payments as negative, the opposite of what QuickBooks expects for a card upload, so purchases land as money received. The preset inverts every sign.",
+      "Extended Details and City/State are multi-line fields inside quotes; some spreadsheet tools split them into extra rows. The preset parses them correctly and leaves them out.",
+      "The Category column is Amex's own classification and isn't accepted by QuickBooks' 3-column import.",
+      "Dates are MM/DD/YYYY; QuickBooks companies outside the US need DD/MM/YYYY."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date",
+        "targetHeader": "Date",
+        "transformationNote": "MM/DD/YYYY"
+      },
+      {
+        "sourceHeader": "Description",
+        "targetHeader": "Description",
+        "transformationNote": "Merchant as shown on the statement"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Amount",
+        "transformationNote": "Sign inverted: charges negative, payments positive"
+      },
+      {
+        "sourceHeader": "Extended Details",
+        "targetHeader": "—",
+        "transformationNote": "Multi-line field dropped"
+      },
+      {
+        "sourceHeader": "Address / City/State / Zip Code / Country",
+        "targetHeader": "—",
+        "transformationNote": "Dropped"
+      },
+      {
+        "sourceHeader": "Category / Reference",
+        "targetHeader": "—",
+        "transformationNote": "Not part of the 3-column format"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/amex-to-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "csv-to-iif",
+    "lang": "en",
+    "source": "Bank CSV, Excel or .QBO",
+    "target": "QuickBooks Desktop .IIF",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/csv-to-iif/",
+    "howToExport": [
+      "Download the statement from your bank as CSV, Excel (.xls/.xlsx), .QBO, .OFX or .QIF: the tool reads all of them.",
+      "Drop it here and check the preview, the totals and the opening and closing balance check.",
+      "Type the exact names of the bank or card account and of the offset accounts, as they appear in your Chart of Accounts.",
+      "Download the 5-row test file first, import it into a backed-up company file, then download the full file."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "auto",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "Status",
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "Pending",
+            "Pendiente",
+            "Reverted",
+            "Declined",
+            "Rechazado"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date",
+          "Transaction Date",
+          "Posting Date",
+          "Booking Date",
+          "Completed Date",
+          "Fecha",
+          "Fecha operación",
+          "Fecha de operación",
+          "Fecha valor",
+          "Fecha movimiento"
+        ],
+        "payee": [
+          "Payee",
+          "Name",
+          "Merchant",
+          "Beneficiario",
+          "Nombre",
+          "Comercio"
+        ],
+        "description": [
+          "Description",
+          "Details",
+          "Narrative",
+          "Memo",
+          "Concepto",
+          "Descripción",
+          "Detalle",
+          "Movimiento"
+        ],
+        "amount": [
+          "Amount",
+          "Net",
+          "Value",
+          "Importe",
+          "Monto",
+          "Valor",
+          "Cantidad"
+        ],
+        "debit": [
+          "Debit",
+          "Withdrawal",
+          "Money Out",
+          "Paid out",
+          "Cargo",
+          "Débito",
+          "Retiro",
+          "Egreso"
+        ],
+        "credit": [
+          "Credit",
+          "Deposit",
+          "Money In",
+          "Paid in",
+          "Abono",
+          "Crédito",
+          "Depósito",
+          "Ingreso"
+        ],
+        "reference": [
+          "Reference",
+          "Ref",
+          "Transaction ID",
+          "Referencia",
+          "Documento",
+          "Nº operación"
+        ],
+        "balance": [
+          "Balance",
+          "Running Balance",
+          "Saldo"
+        ],
+        "currency": [
+          "Currency",
+          "Moneda",
+          "Divisa"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "QuickBooks Desktop has no undo for .IIF imports, and any account name it doesn't recognise is created as a new account: type the names exactly as in your Chart of Accounts.",
+      "Each transaction is a TRNS line plus SPL lines that must add up to zero. The tool checks every transaction to the cent and refuses to create a file that doesn't balance.",
+      "Money out is written as CHECK and money in as DEPOSIT (CREDIT CARD and CCARD REFUND for card accounts), following Intuit's own sample files.",
+      "QuickBooks Desktop 2023 lost its connected services, including bank feeds, on 31 May 2026; .IIF import runs inside QuickBooks and keeps working."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date",
+        "targetHeader": "DATE",
+        "transformationNote": "M/D/YYYY, or D/M/YYYY for UK and Canadian editions"
+      },
+      {
+        "sourceHeader": "Payee / Description",
+        "targetHeader": "NAME",
+        "transformationNote": "Optional: payees can stay in the memo so no new names are added"
+      },
+      {
+        "sourceHeader": "Amount, or Debit + Credit",
+        "targetHeader": "TRNS AMOUNT",
+        "transformationNote": "Signed amount on your bank or card account"
+      },
+      {
+        "sourceHeader": "(same amount, opposite sign)",
+        "targetHeader": "SPL AMOUNT",
+        "transformationNote": "Posted to your offset account so the entry balances"
+      },
+      {
+        "sourceHeader": "Check number (OFX/QIF)",
+        "targetHeader": "DOCNUM",
+        "transformationNote": "Numeric check numbers only"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": "iif",
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/csv-to-iif.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "csv-to-qbo",
+    "lang": "en",
+    "source": "Bank CSV or Excel",
+    "target": "QuickBooks .QBO",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/csv-to-qbo/",
+    "howToExport": [
+      "Sign in to online banking on a computer and open the account's transaction history.",
+      "Choose the date range: a full statement month is easiest to reconcile.",
+      "Choose Download or Export in CSV or Excel (.xlsx/.xls). If the bank offers QuickBooks (.QBO) itself, you can import that directly.",
+      "Drop the file here, compare the totals with your statement, then pick your bank in the .QBO settings."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "auto",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "Status",
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "Pending",
+            "Pendiente",
+            "Reverted",
+            "Declined",
+            "Rechazado"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date",
+          "Transaction Date",
+          "Posting Date",
+          "Booking Date",
+          "Completed Date",
+          "Fecha",
+          "Fecha operación",
+          "Fecha de operación",
+          "Fecha valor",
+          "Fecha movimiento"
+        ],
+        "payee": [
+          "Payee",
+          "Name",
+          "Merchant",
+          "Beneficiario",
+          "Nombre",
+          "Comercio"
+        ],
+        "description": [
+          "Description",
+          "Details",
+          "Narrative",
+          "Memo",
+          "Concepto",
+          "Descripción",
+          "Detalle",
+          "Movimiento"
+        ],
+        "amount": [
+          "Amount",
+          "Net",
+          "Value",
+          "Importe",
+          "Monto",
+          "Valor",
+          "Cantidad"
+        ],
+        "debit": [
+          "Debit",
+          "Withdrawal",
+          "Money Out",
+          "Paid out",
+          "Cargo",
+          "Débito",
+          "Retiro",
+          "Egreso"
+        ],
+        "credit": [
+          "Credit",
+          "Deposit",
+          "Money In",
+          "Paid in",
+          "Abono",
+          "Crédito",
+          "Depósito",
+          "Ingreso"
+        ],
+        "reference": [
+          "Reference",
+          "Ref",
+          "Transaction ID",
+          "Referencia",
+          "Documento",
+          "Nº operación"
+        ],
+        "balance": [
+          "Balance",
+          "Running Balance",
+          "Saldo"
+        ],
+        "currency": [
+          "Currency",
+          "Moneda",
+          "Divisa"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "QuickBooks Desktop checks the file's Intuit bank ID (INTU.BID) against Intuit's list and stops at unknown banks. Pick yours from the list, which comes from Intuit's own Web Connect directory.",
+      "QuickBooks skips a transaction whose FITID it has already imported into the account. The tool gives the same transaction the same ID every time, and two identical charges on one day different IDs.",
+      ".QBO files are declared US-ASCII, so accents and symbols are folded to plain letters; payee names are cut to 32 characters and memos to 255.",
+      "Dates are written at noon GMT, so no time zone can move a transaction to the day before or after."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date / Posting Date",
+        "targetHeader": "<DTPOSTED>",
+        "transformationNote": "Read in the file's date order, written as YYYYMMDD at noon GMT"
+      },
+      {
+        "sourceHeader": "Description / Payee",
+        "targetHeader": "<NAME>",
+        "transformationNote": "First 32 characters, accents folded to ASCII"
+      },
+      {
+        "sourceHeader": "Extra description, reference",
+        "targetHeader": "<MEMO>",
+        "transformationNote": "Up to 255 characters"
+      },
+      {
+        "sourceHeader": "Amount, or Debit + Credit",
+        "targetHeader": "<TRNAMT>, <TRNTYPE>",
+        "transformationNote": "Signed amount; CREDIT for money in, DEBIT for money out"
+      },
+      {
+        "sourceHeader": "(computed)",
+        "targetHeader": "<FITID>",
+        "transformationNote": "Date + 16-character hash of date, amount, payee and memo"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": "qbo",
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/csv-to-qbo.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "interactive-brokers-to-excel",
+    "lang": "en",
+    "source": "Interactive Brokers",
+    "target": "Excel",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/interactive-brokers-to-excel/",
+    "howToExport": [
+      "In the IBKR Portal, open the reports area and choose Statements → Activity.",
+      "Pick the period (monthly, yearly or custom dates) and CSV as the format.",
+      "Run and download the statement, then drop it above; choose a section in the Section menu."
+    ],
+    "file": {
+      "delimiter": ",",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "DataDiscriminator"
+          ],
+          "values": [
+            "ClosedLot"
+          ]
+        }
+      ],
+      "sectionFilter": "Trades",
+      "columns": {
+        "date": [
+          "Date/Time",
+          "Date",
+          "Settle Date"
+        ],
+        "description": [
+          "Symbol",
+          "Description"
+        ],
+        "amount": [
+          "Proceeds",
+          "Amount",
+          "Net Amount"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Every row starts with its section name and Header or Data, so one CSV holds dozens of tables with different columns; Excel shows it as one jagged sheet.",
+      "Trades include SubTotal and Total rows plus ClosedLot detail rows under closing trades. Summing Proceeds without removing them double-counts; the preset drops all three.",
+      "Trade times are written as «2024-01-15, 10:30:01», with a comma inside the date, which Excel treats as text; the preset keeps the date only.",
+      "Numbers mix integers and decimals from row to row; they're written uniformly so Excel sums and pivots work."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Section name / Header|Data",
+        "targetHeader": "—",
+        "transformationNote": "The first two columns of every row are removed"
+      },
+      {
+        "sourceHeader": "Date/Time",
+        "targetHeader": "Date/Time",
+        "transformationNote": "«2024-01-15, 10:30:01» → 2024-01-15"
+      },
+      {
+        "sourceHeader": "Symbol",
+        "targetHeader": "Symbol",
+        "transformationNote": "Kept as is"
+      },
+      {
+        "sourceHeader": "Quantity / T. Price",
+        "targetHeader": "Quantity / T. Price",
+        "transformationNote": "Uniform number format"
+      },
+      {
+        "sourceHeader": "Proceeds",
+        "targetHeader": "Proceeds",
+        "transformationNote": "Also used for the in/out totals"
+      },
+      {
+        "sourceHeader": "DataDiscriminator = ClosedLot",
+        "targetHeader": "—",
+        "transformationNote": "Detail rows dropped"
+      }
+    ],
+    "output": {
+      "profile": "excel-clean",
+      "accountingFile": null,
+      "dateFormat": "YYYY-MM-DD"
+    },
+    "sample": {
+      "file": "samples/en/interactive-brokers-to-excel.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "n26-to-ynab",
+    "lang": "en",
+    "source": "N26",
+    "target": "YNAB",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/n26-to-ynab/",
+    "howToExport": [
+      "Open N26 in a web browser; the CSV download is offered in the web app.",
+      "Select the account or Space, open Downloads and, under account activity, set the date range.",
+      "Choose CSV, download the file and drop it above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "auto",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Booking Date",
+          "Date",
+          "Buchungsdatum",
+          "Datum"
+        ],
+        "payee": [
+          "Partner Name",
+          "Payee",
+          "Empfänger"
+        ],
+        "memo": [
+          "Payment Reference",
+          "Payment reference",
+          "Verwendungszweck"
+        ],
+        "amount": [
+          "Amount (EUR)",
+          "Betrag (EUR)",
+          "Amount"
+        ]
+      },
+      "descriptionFrom": [
+        "payee"
+      ]
+    },
+    "knownQuirks": [
+      "N26 exports carry two dates, Booking Date and Value Date, and YNAB needs one. The preset uses the booking date, the day the transaction hit your account.",
+      "The counterparty is in Partner Name (Payee in older exports) and the purpose in Payment Reference; YNAB keeps them apart as Payee and Memo.",
+      "Card payments abroad are already converted to EUR, with the original amount and currency in separate columns; only the EUR amount is imported.",
+      "Header names and decimal style vary with the export version and language (English or German names, dot or comma); both are recognised."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Booking Date",
+        "targetHeader": "Date",
+        "transformationNote": "YYYY-MM-DD; Value Date ignored"
+      },
+      {
+        "sourceHeader": "Partner Name",
+        "targetHeader": "Payee",
+        "transformationNote": "Counterparty or merchant"
+      },
+      {
+        "sourceHeader": "Payment Reference",
+        "targetHeader": "Memo",
+        "transformationNote": "Purpose of the payment"
+      },
+      {
+        "sourceHeader": "Amount (EUR)",
+        "targetHeader": "Outflow / Inflow",
+        "transformationNote": "Split into positive Outflow and Inflow"
+      },
+      {
+        "sourceHeader": "Partner Iban / Type / Original Amount",
+        "targetHeader": "—",
+        "transformationNote": "Not needed by YNAB"
+      }
+    ],
+    "output": {
+      "profile": "ynab",
+      "accountingFile": null,
+      "dateFormat": "YYYY-MM-DD"
+    },
+    "sample": {
+      "file": "samples/en/n26-to-ynab.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "ofx-to-qbo",
+    "lang": "en",
+    "source": "OFX / QFX",
+    "target": "QuickBooks .QBO",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/ofx-to-qbo/",
+    "howToExport": [
+      "In online banking, open the account's activity and choose Download or Export.",
+      "Pick Quicken (.QFX), Microsoft Money or OFX: they're all the same family of format. If QuickBooks (.QBO) is offered, you can import that directly.",
+      "Drop the file here: transactions, account number and ending balance are read from it.",
+      "Choose your bank in the .QBO settings and download."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date"
+        ],
+        "payee": [
+          "Payee"
+        ],
+        "memo": [
+          "Memo"
+        ],
+        "amount": [
+          "Amount"
+        ],
+        "reference": [
+          "Check"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "A .QFX file carries Quicken's bank ID, and Quicken and QuickBooks can use different IDs for the same bank, so pick your bank again for the .QBO file.",
+      "The bank's own transaction IDs (FITID) are kept by default, so QuickBooks still recognises transactions it imported earlier from the bank's own files.",
+      "Dates are read as the calendar day written in the file and never shifted by the time zone the bank adds after them.",
+      "Files declared CHARSET:1252 are read as Windows-1252, and escaped characters such as &amp; are decoded before the .QBO file is written."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "<DTPOSTED>",
+        "targetHeader": "<DTPOSTED>",
+        "transformationNote": "Same calendar day, written at noon GMT"
+      },
+      {
+        "sourceHeader": "<FITID>",
+        "targetHeader": "<FITID>",
+        "transformationNote": "The bank's ID is kept (or regenerated if you untick the option)"
+      },
+      {
+        "sourceHeader": "<NAME> / <MEMO>",
+        "targetHeader": "<NAME> / <MEMO>",
+        "transformationNote": "Folded to ASCII; 32 and 255 characters"
+      },
+      {
+        "sourceHeader": "<TRNAMT>",
+        "targetHeader": "<TRNAMT>",
+        "transformationNote": "Unchanged, with a dot decimal"
+      },
+      {
+        "sourceHeader": "<BANKACCTFROM> / <CCACCTFROM>",
+        "targetHeader": "Account settings",
+        "transformationNote": "Account number and checking, savings or credit-card type carried over"
+      },
+      {
+        "sourceHeader": "<LEDGERBAL>",
+        "targetHeader": "<LEDGERBAL>",
+        "transformationNote": "Ending balance carried over and checked against the transactions"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": "qbo",
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/ofx-to-qbo.qfx",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "paypal-to-quickbooks",
+    "lang": "en",
+    "source": "PayPal",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/paypal-to-quickbooks/",
+    "howToExport": [
+      "Log in to PayPal on the web and go to Activity.",
+      "Click the Download icon and choose Custom; pick the date range (one request covers up to 12 months).",
+      "Select CSV as the format and keep the default fields (Date, Name, Type, Status, Currency, Gross, Fee, Net, Balance…).",
+      "Download the report once PayPal says it's ready (large ones take a while), then add it above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "MDY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "Status"
+          ],
+          "values": [
+            "Pending",
+            "Denied",
+            "Voided"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date"
+        ],
+        "payee": [
+          "Name"
+        ],
+        "description": [
+          "Type"
+        ],
+        "amount": [
+          "Net"
+        ],
+        "currency": [
+          "Currency"
+        ],
+        "reference": [
+          "Transaction ID"
+        ],
+        "balance": [
+          "Balance"
+        ],
+        "gross": [
+          "Gross",
+          "Bruto",
+          "Importe bruto"
+        ],
+        "fee": [
+          "Fee",
+          "Tarifa",
+          "Comisión"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Authorization holds and unsettled payments appear with Status «Pending»; importing them counts money that never settled. The preset drops Pending, Denied and Voided rows.",
+      "Gross is the amount before PayPal's fee and Net is what reached your balance. QuickBooks reconciles against the PayPal balance, so the preset uses Net.",
+      "Amounts are quoted and carry thousands separators (\"1,250.00\"), which trips up QuickBooks' upload. The preset writes plain 1250.00.",
+      "Multi-currency payments add rows in each currency; the cleaner keeps one currency per file so the QuickBooks PayPal account stays consistent."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date",
+        "targetHeader": "Date",
+        "transformationNote": "Kept as MM/DD/YYYY (switch to DD/MM/YYYY for QuickBooks outside the US)"
+      },
+      {
+        "sourceHeader": "Name",
+        "targetHeader": "Description",
+        "transformationNote": "Joined with Type: «Jane Buyer – Express Checkout Payment»"
+      },
+      {
+        "sourceHeader": "Type",
+        "targetHeader": "Description",
+        "transformationNote": "Second half of the description"
+      },
+      {
+        "sourceHeader": "Net",
+        "targetHeader": "Amount",
+        "transformationNote": "Fee already deducted; thousands separators removed; money out stays negative"
+      },
+      {
+        "sourceHeader": "Status",
+        "targetHeader": "—",
+        "transformationNote": "Pending, Denied and Voided rows dropped"
+      },
+      {
+        "sourceHeader": "Gross / Fee",
+        "targetHeader": "—",
+        "transformationNote": "Not needed: Net already includes the fee"
+      },
+      {
+        "sourceHeader": "Time / TimeZone / Transaction ID",
+        "targetHeader": "—",
+        "transformationNote": "Not used by QuickBooks' 3-column format"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/paypal-to-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "paypal-to-xero",
+    "lang": "en",
+    "source": "PayPal",
+    "target": "Xero",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/paypal-to-xero/",
+    "howToExport": [
+      "Log in to PayPal on the web and go to Activity.",
+      "Click the Download icon and choose Custom; pick the date range (one request covers up to 12 months).",
+      "Select CSV as the format and keep the default fields (Date, Name, Type, Status, Currency, Gross, Fee, Net, Balance…).",
+      "Download the report once PayPal says it's ready (large ones take a while), then add it above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "MDY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "Status"
+          ],
+          "values": [
+            "Pending",
+            "Denied",
+            "Voided"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date"
+        ],
+        "payee": [
+          "Name"
+        ],
+        "description": [
+          "Type"
+        ],
+        "amount": [
+          "Net"
+        ],
+        "currency": [
+          "Currency"
+        ],
+        "reference": [
+          "Transaction ID"
+        ],
+        "balance": [
+          "Balance"
+        ],
+        "gross": [
+          "Gross",
+          "Bruto",
+          "Importe bruto"
+        ],
+        "fee": [
+          "Fee",
+          "Tarifa",
+          "Comisión"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "PayPal's Net column is what reaches your PayPal balance. With the gross/fee split on, a Gross line and a Fee line replace each Net line and still add up to it to the cent.",
+      "Pending, denied and voided rows are dropped using the Status column, so authorisations that never settled don't land in Xero.",
+      "A refund that returns part of the fee produces a positive fee line: the split works the fee out from Gross and Net, so PayPal's sign conventions don't matter.",
+      "Currency conversions show up as paired rows. If your file mixes currencies, pick one per import, as a Xero bank account holds a single currency."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date",
+        "targetHeader": "Date",
+        "transformationNote": "PayPal's MM/DD/YYYY written as DD/MM/YYYY (changeable)"
+      },
+      {
+        "sourceHeader": "Name",
+        "targetHeader": "Payee",
+        "transformationNote": "Payer or merchant name"
+      },
+      {
+        "sourceHeader": "Type",
+        "targetHeader": "Description",
+        "transformationNote": "Express Checkout Payment, Payment Refund…"
+      },
+      {
+        "sourceHeader": "Net (or Gross + Fee)",
+        "targetHeader": "Amount",
+        "transformationNote": "Net amount; with the split on, separate gross and fee lines"
+      },
+      {
+        "sourceHeader": "Transaction ID",
+        "targetHeader": "Reference",
+        "transformationNote": "Kept to match the PayPal record"
+      }
+    ],
+    "output": {
+      "profile": "xero",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/paypal-to-xero.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "revolut-to-quickbooks",
+    "lang": "en",
+    "source": "Revolut",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/revolut-to-quickbooks/",
+    "howToExport": [
+      "In Revolut, pick the currency account you're bookkeeping: one QuickBooks bank account per Revolut currency keeps balances honest.",
+      "Open its Statement option, choose the spreadsheet format rather than PDF, and select the accounting period.",
+      "Download the CSV and drop it above; it needs no manual edits first."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": true,
+      "excludeRows": [
+        {
+          "columns": [
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "PENDING",
+            "REVERTED",
+            "DECLINED",
+            "FAILED",
+            "PENDIENTE",
+            "REVERTIDO",
+            "RECHAZADO",
+            "FALLIDO"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Completed Date",
+          "Fecha de finalización",
+          "Fecha de completado",
+          "Started Date",
+          "Fecha de inicio"
+        ],
+        "description": [
+          "Description",
+          "Descripción"
+        ],
+        "memo": [
+          "Type",
+          "Tipo"
+        ],
+        "amount": [
+          "Amount",
+          "Importe",
+          "Cantidad"
+        ],
+        "fee": [
+          "Fee",
+          "Comisión",
+          "Tarifa"
+        ],
+        "currency": [
+          "Currency",
+          "Divisa",
+          "Moneda"
+        ],
+        "balance": [
+          "Balance",
+          "Saldo"
+        ]
+      },
+      "descriptionFrom": [
+        "description",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "The Type column (CARD_PAYMENT, TOPUP, TRANSFER, EXCHANGE…) carries the context QuickBooks bank rules need, but in shouting case; the preset appends it to the description as readable text.",
+      "Top-ups from your own bank look like income in the CSV; in QuickBooks they should be matched as transfers, not recorded as sales.",
+      "Each currency exchange creates a row in each currency. With one QuickBooks account per currency, upload each side to its own account by picking the currency in the selector.",
+      "Started Date and Completed Date both include a time; QuickBooks wants one plain date column, so the settled Completed Date is used."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Completed Date",
+        "targetHeader": "Date",
+        "transformationNote": "Converted to MM/DD/YYYY, time dropped"
+      },
+      {
+        "sourceHeader": "Description",
+        "targetHeader": "Description",
+        "transformationNote": "First half of the description"
+      },
+      {
+        "sourceHeader": "Type",
+        "targetHeader": "Description",
+        "transformationNote": "Humanized and appended: «Adobe Creative Cloud – Card payment»"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Amount",
+        "transformationNote": "Signed amount with plain dot decimals"
+      },
+      {
+        "sourceHeader": "Fee",
+        "targetHeader": "Amount",
+        "transformationNote": "Subtracted so QuickBooks matches the Revolut balance"
+      },
+      {
+        "sourceHeader": "State",
+        "targetHeader": "—",
+        "transformationNote": "Only COMPLETED rows are kept"
+      },
+      {
+        "sourceHeader": "Product / Balance / Currency",
+        "targetHeader": "—",
+        "transformationNote": "Not part of QuickBooks' 3-column format"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/revolut-to-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "revolut-to-ynab",
+    "lang": "en",
+    "source": "Revolut",
+    "target": "YNAB",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/revolut-to-ynab/",
+    "howToExport": [
+      "Open Revolut (app or web), select the account you budget with and open its Statement option.",
+      "Choose the spreadsheet format (CSV / Excel) instead of PDF, and the period you want to import.",
+      "Generate and download the file; repeat per month if you keep monthly statements.",
+      "Drop the file (or several months at once) into the tool above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": true,
+      "excludeRows": [
+        {
+          "columns": [
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "PENDING",
+            "REVERTED",
+            "DECLINED",
+            "FAILED",
+            "PENDIENTE",
+            "REVERTIDO",
+            "RECHAZADO",
+            "FALLIDO"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Completed Date",
+          "Fecha de finalización",
+          "Fecha de completado",
+          "Started Date",
+          "Fecha de inicio"
+        ],
+        "description": [
+          "Description",
+          "Descripción"
+        ],
+        "amount": [
+          "Amount",
+          "Importe",
+          "Cantidad"
+        ],
+        "fee": [
+          "Fee",
+          "Comisión",
+          "Tarifa"
+        ],
+        "currency": [
+          "Currency",
+          "Divisa",
+          "Moneda"
+        ],
+        "balance": [
+          "Balance",
+          "Saldo"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Card payments that haven't settled are exported with an empty Completed Date and State PENDING; importing them creates transactions that later change or vanish. The preset drops PENDING, REVERTED, DECLINED and FAILED rows.",
+      "Fees sit in a separate Fee column (for example on currency exchanges), so Amount alone doesn't match your balance. The preset subtracts the fee from each amount.",
+      "One statement can mix currencies: an exchange creates rows in both. A YNAB account holds a single currency, so the most frequent one is kept and you can pick another.",
+      "Dates include the time (2024-03-02 09:15:22); the preset writes plain YYYY-MM-DD dates using the settled Completed Date."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Completed Date",
+        "targetHeader": "Date",
+        "transformationNote": "Time removed; settled date used instead of Started Date"
+      },
+      {
+        "sourceHeader": "Description",
+        "targetHeader": "Payee",
+        "transformationNote": "Merchant or counterparty name, whitespace cleaned"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Outflow / Inflow",
+        "transformationNote": "Negative amounts go to Outflow, positive to Inflow, both written as positive numbers"
+      },
+      {
+        "sourceHeader": "Fee",
+        "targetHeader": "Outflow / Inflow",
+        "transformationNote": "Subtracted from the amount before the split"
+      },
+      {
+        "sourceHeader": "State",
+        "targetHeader": "—",
+        "transformationNote": "PENDING, REVERTED, DECLINED and FAILED rows dropped"
+      },
+      {
+        "sourceHeader": "Currency",
+        "targetHeader": "—",
+        "transformationNote": "Used to keep a single currency per file"
+      },
+      {
+        "sourceHeader": "Type / Product / Balance",
+        "targetHeader": "—",
+        "transformationNote": "Not needed by YNAB"
+      }
+    ],
+    "output": {
+      "profile": "ynab",
+      "accountingFile": null,
+      "dateFormat": "YYYY-MM-DD"
+    },
+    "sample": {
+      "file": "samples/en/revolut-to-ynab.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "stripe-to-quickbooks",
+    "lang": "en",
+    "source": "Stripe",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/stripe-to-quickbooks/",
+    "howToExport": [
+      "In the Stripe Dashboard, open the balance reports and choose the period you're closing.",
+      "Download the itemized balance change CSV (the itemized export, not the summary).",
+      "Keep the default columns or add metadata; the preset reads only what QuickBooks needs. Drop the file above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "created_utc",
+          "Created (UTC)",
+          "created",
+          "Created date (UTC)"
+        ],
+        "description": [
+          "description",
+          "Description"
+        ],
+        "memo": [
+          "reporting_category",
+          "Type",
+          "type"
+        ],
+        "amount": [
+          "net",
+          "Net"
+        ],
+        "reference": [
+          "balance_transaction_id",
+          "id",
+          "source_id",
+          "Source"
+        ],
+        "currency": [
+          "currency",
+          "Currency"
+        ],
+        "gross": [
+          "gross",
+          "Gross",
+          "Amount"
+        ],
+        "fee": [
+          "fee",
+          "Fee"
+        ]
+      },
+      "descriptionFrom": [
+        "description",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "Timestamps are in UTC (2024-04-06 21:47:13), so a late-evening sale in the Americas can land on the next day; the preset keeps the UTC date Stripe reports.",
+      "Each row has gross, fee and net. QuickBooks reconciles against what reaches your Stripe balance, so the preset uses net.",
+      "Payouts to your bank appear as negative rows (reporting category payout): money leaving Stripe that should be matched as a transfer, not an expense.",
+      "Custom metadata can add dozens of columns; none of them are needed for the 3-column upload."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "created_utc",
+        "targetHeader": "Date",
+        "transformationNote": "UTC timestamp → MM/DD/YYYY"
+      },
+      {
+        "sourceHeader": "description",
+        "targetHeader": "Description",
+        "transformationNote": "Charge or invoice description"
+      },
+      {
+        "sourceHeader": "reporting_category",
+        "targetHeader": "Description",
+        "transformationNote": "Appended: «Invoice 1043 – Charge»"
+      },
+      {
+        "sourceHeader": "net",
+        "targetHeader": "Amount",
+        "transformationNote": "Net of Stripe fees; payouts negative"
+      },
+      {
+        "sourceHeader": "gross / fee",
+        "targetHeader": "—",
+        "transformationNote": "Not used in the 3-column format"
+      },
+      {
+        "sourceHeader": "balance_transaction_id / available_on_utc",
+        "targetHeader": "—",
+        "transformationNote": "Dropped"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/stripe-to-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "stripe-to-xero",
+    "lang": "en",
+    "source": "Stripe",
+    "target": "Xero",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/stripe-to-xero/",
+    "howToExport": [
+      "In Stripe, open the balance reports and pick the dates of the Xero period you're reconciling.",
+      "Download the itemized balance change CSV, adding the customer email column if the column picker offers it.",
+      "Drop the file above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "created_utc",
+          "Created (UTC)",
+          "created"
+        ],
+        "payee": [
+          "customer_email",
+          "Customer Email",
+          "customer_name",
+          "Customer Name"
+        ],
+        "description": [
+          "description",
+          "Description"
+        ],
+        "reference": [
+          "source_id",
+          "Source",
+          "id",
+          "balance_transaction_id"
+        ],
+        "amount": [
+          "net",
+          "Net"
+        ],
+        "currency": [
+          "currency",
+          "Currency"
+        ],
+        "gross": [
+          "gross",
+          "Gross",
+          "Amount"
+        ],
+        "fee": [
+          "fee",
+          "Fee"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Xero's statement import has a Payee field but Stripe has no payee column; the customer email (or name) is the closest match and helps invoice matching.",
+      "Source IDs (ch_…, re_…, po_…) tell charges, refunds and payouts apart; in Reference they're searchable in Xero.",
+      "Rows without a customer, such as fees, payouts and adjustments, keep an empty Payee, which Xero accepts."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "created_utc",
+        "targetHeader": "Date",
+        "transformationNote": "UTC timestamp → DD/MM/YYYY"
+      },
+      {
+        "sourceHeader": "net",
+        "targetHeader": "Amount",
+        "transformationNote": "Net of fees; payouts negative"
+      },
+      {
+        "sourceHeader": "customer_email",
+        "targetHeader": "Payee",
+        "transformationNote": "Customer contact for invoice matching"
+      },
+      {
+        "sourceHeader": "description",
+        "targetHeader": "Description",
+        "transformationNote": "Stripe's description"
+      },
+      {
+        "sourceHeader": "source_id",
+        "targetHeader": "Reference",
+        "transformationNote": "ch_ / re_ / po_ identifier"
+      },
+      {
+        "sourceHeader": "gross / fee / available_on_utc",
+        "targetHeader": "—",
+        "transformationNote": "Dropped"
+      }
+    ],
+    "output": {
+      "profile": "xero",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/stripe-to-xero.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "wise-to-quickbooks",
+    "lang": "en",
+    "source": "Wise",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/wise-to-quickbooks/",
+    "howToExport": [
+      "In Wise, open the currency balance you want to import and go to its statements.",
+      "Choose the period and CSV as the file type; business accounts may add extra columns, which the preset ignores.",
+      "Download one file per currency balance and drop it above."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date",
+          "Fecha"
+        ],
+        "payee": [
+          "Merchant",
+          "Payee Name",
+          "Payer Name"
+        ],
+        "memo": [
+          "Payment Reference",
+          "Reference"
+        ],
+        "description": [
+          "Description"
+        ],
+        "amount": [
+          "Amount"
+        ],
+        "reference": [
+          "TransferWise ID"
+        ],
+        "currency": [
+          "Currency"
+        ],
+        "balance": [
+          "Running Balance"
+        ],
+        "fee": [
+          "Total fees",
+          "Comisiones totales"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "Every row carries conversion metadata (Exchange From, Exchange To, Exchange Rate) that QuickBooks' 3-column upload can't take; it is dropped.",
+      "The counterparty sits in a different column depending on direction: Payee Name for money out, Payer Name for money in, Merchant for card spend. The preset reads whichever is filled on each row.",
+      "Wise's Description («Card transaction of 18.40 GBP issued by…») repeats the amount; counterparty plus payment reference makes a steadier QuickBooks description, with the original as fallback.",
+      "Each statement covers one currency balance, so it belongs in a QuickBooks account in that same currency."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date",
+        "targetHeader": "Date",
+        "transformationNote": "MM/DD/YYYY for US companies (DD/MM/YYYY elsewhere)"
+      },
+      {
+        "sourceHeader": "Merchant / Payee Name / Payer Name",
+        "targetHeader": "Description",
+        "transformationNote": "First non-empty counterparty on each row"
+      },
+      {
+        "sourceHeader": "Payment Reference",
+        "targetHeader": "Description",
+        "transformationNote": "Appended: «Acme GmbH – INV-1043»"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Amount",
+        "transformationNote": "Signed amount with dot decimals"
+      },
+      {
+        "sourceHeader": "Exchange From / To / Rate",
+        "targetHeader": "—",
+        "transformationNote": "Dropped: not accepted by QuickBooks"
+      },
+      {
+        "sourceHeader": "TransferWise ID / Running Balance",
+        "targetHeader": "—",
+        "transformationNote": "Not part of the 3-column format"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "MM/DD/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/wise-to-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "wise-to-xero",
+    "lang": "en",
+    "source": "Wise",
+    "target": "Xero",
+    "cleanerUrl": "https://mercaops.com/csv-cleaner/wise-to-xero/",
+    "howToExport": [
+      "Sign in to Wise Business and open the currency balance that matches your Xero bank account.",
+      "Open its statements, select the period and choose CSV.",
+      "Download the file and drop it above; several months can be merged into one import."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date",
+          "Fecha"
+        ],
+        "payee": [
+          "Payee Name",
+          "Payer Name",
+          "Merchant"
+        ],
+        "description": [
+          "Description"
+        ],
+        "reference": [
+          "TransferWise ID"
+        ],
+        "amount": [
+          "Amount"
+        ],
+        "currency": [
+          "Currency"
+        ],
+        "balance": [
+          "Running Balance"
+        ],
+        "fee": [
+          "Total fees",
+          "Comisiones totales"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Xero wants one Payee per line, but Wise spreads it over Payee Name (outgoing), Payer Name (incoming) and Merchant (card). The preset picks the filled one on each row.",
+      "Running Balance and the Exchange columns clutter Xero's import mapping and aren't needed for reconciliation; they're removed.",
+      "Wise fee lines and conversions between your own balances have no counterparty at all, so their Payee stays empty."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date",
+        "targetHeader": "Date",
+        "transformationNote": "DD/MM/YYYY"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Amount",
+        "transformationNote": "Single signed column, dot decimals"
+      },
+      {
+        "sourceHeader": "Payee Name / Payer Name / Merchant",
+        "targetHeader": "Payee",
+        "transformationNote": "First non-empty per row"
+      },
+      {
+        "sourceHeader": "Description",
+        "targetHeader": "Description",
+        "transformationNote": "Kept as Wise wrote it"
+      },
+      {
+        "sourceHeader": "TransferWise ID",
+        "targetHeader": "Reference",
+        "transformationNote": "Unique ID for tracing each line"
+      },
+      {
+        "sourceHeader": "Running Balance / Exchange Rate",
+        "targetHeader": "—",
+        "transformationNote": "Removed"
+      }
+    ],
+    "output": {
+      "profile": "xero",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/en/wise-to-xero.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "bancolombia-a-alegra",
+    "lang": "es",
+    "source": "Bancolombia",
+    "target": "Alegra .xlsx",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/bancolombia-a-alegra/",
+    "howToExport": [
+      "Entra en la Sucursal Virtual Personas de Bancolombia y abre la cuenta desde la sección de saldos y movimientos o de documentos.",
+      "Elige el periodo y pulsa Descargar en formato XLS (Excel); el PDF no sirve para importar.",
+      "Suelta el XLS aquí tal cual: no hace falta abrirlo en Excel ni guardarlo como CSV.",
+      "La herramienta abre directamente en «Alegra (.xlsx)»: revisa los totales y descarga."
+    ],
+    "file": {
+      "delimiter": ";",
+      "decimalStyle": ",",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Fecha",
+          "Fecha movimiento",
+          "Fecha transacción"
+        ],
+        "description": [
+          "Descripción",
+          "Descripcion",
+          "Concepto",
+          "Detalle"
+        ],
+        "reference": [
+          "Referencia",
+          "Documento",
+          "Dcto.",
+          "Número de documento"
+        ],
+        "amount": [
+          "Valor",
+          "Valor transacción",
+          "Monto"
+        ],
+        "debit": [
+          "Débito",
+          "Debito",
+          "Retiros"
+        ],
+        "credit": [
+          "Crédito",
+          "Credito",
+          "Consignaciones"
+        ],
+        "balance": [
+          "Saldo",
+          "Saldo disponible"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Alegra solo importa extractos con su plantilla .xlsx (no CSV): columnas Fecha, Descripción y Monto en la hoja INGRESO DE DATOS.",
+      "Alegra rechaza descripciones con números o caracteres especiales, así que se eliminan: «TRANSFERENCIA A NEQUI 300*****21» queda «TRANSFERENCIA A NEQUI».",
+      "Los montos van como número con punto decimal y las salidas en negativo; Alegra detiene la importación si encuentra más de 20 errores.",
+      "El 4x1000 (GMF) y la cuota de manejo salen como movimientos propios, para que los concilies contra su cuenta de gasto."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "FECHA",
+        "targetHeader": "Fecha",
+        "transformationNote": "Fecha real de Excel con formato dd/mm/aaaa"
+      },
+      {
+        "sourceHeader": "DESCRIPCIÓN",
+        "targetHeader": "Descripción",
+        "transformationNote": "Sin números ni símbolos, como pide Alegra"
+      },
+      {
+        "sourceHeader": "VALOR",
+        "targetHeader": "Monto",
+        "transformationNote": "Número con punto decimal; negativo = salida"
+      },
+      {
+        "sourceHeader": "REFERENCIA",
+        "targetHeader": "(omitida)",
+        "transformationNote": "La plantilla de Alegra no la importa"
+      },
+      {
+        "sourceHeader": "SALDO",
+        "targetHeader": "(omitido)",
+        "transformationNote": "Se usa para la comprobación de saldos"
+      }
+    ],
+    "output": {
+      "profile": "excel-clean",
+      "accountingFile": "alegra",
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/bancolombia-a-alegra.csv",
+      "encoding": "windows-1252",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "bancolombia-a-excel",
+    "lang": "es",
+    "source": "Bancolombia",
+    "target": "Excel",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/bancolombia-a-excel/",
+    "howToExport": [
+      "Entra en la Sucursal Virtual Personas de Bancolombia y abre la cuenta desde la sección de saldos y movimientos o de documentos.",
+      "Elige el periodo y pulsa Descargar en formato XLS (Excel); el PDF no sirve para importar.",
+      "Suelta el XLS aquí tal cual: no hace falta abrirlo en Excel ni guardarlo como CSV.",
+      "Puedes añadir varios meses a la vez, en XLS o en CSV."
+    ],
+    "file": {
+      "delimiter": ";",
+      "decimalStyle": ",",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Fecha",
+          "Fecha movimiento",
+          "Fecha transacción"
+        ],
+        "description": [
+          "Descripción",
+          "Descripcion",
+          "Concepto",
+          "Detalle"
+        ],
+        "reference": [
+          "Referencia",
+          "Documento",
+          "Dcto.",
+          "Número de documento"
+        ],
+        "amount": [
+          "Valor",
+          "Valor transacción",
+          "Monto"
+        ],
+        "debit": [
+          "Débito",
+          "Debito",
+          "Retiros"
+        ],
+        "credit": [
+          "Crédito",
+          "Credito",
+          "Consignaciones"
+        ],
+        "balance": [
+          "Saldo",
+          "Saldo disponible"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Si guardas el XLS como CSV desde un Excel en español, sale con punto y coma y en ANSI (Windows-1252): «DESCRIPCIÓN» aparece como «DESCRIPCI�N» en otros programas. Con el XLS original no pasa, y con el CSV el ajuste recupera las tildes.",
+      "Los valores usan punto de miles y coma decimal (-185.430,00). El limpiador los convierte en números reales y los devuelve con coma decimal para un Excel en español.",
+      "Antes de la tabla hay filas con el banco, el número de cuenta y el periodo, y al final una fila de saldo; el ajuste encuentra el encabezado solo y omite esas filas.",
+      "Si pegas varios periodos en un mismo archivo, el encabezado se repite a mitad de la tabla; esas filas de encabezado repetidas se quitan."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "FECHA",
+        "targetHeader": "Fecha",
+        "transformationNote": "DD/MM/AAAA, sin hora ni día de la semana"
+      },
+      {
+        "sourceHeader": "DESCRIPCIÓN",
+        "targetHeader": "Descripción",
+        "transformationNote": "Tildes recuperadas y espacios sobrantes eliminados"
+      },
+      {
+        "sourceHeader": "REFERENCIA",
+        "targetHeader": "Referencia",
+        "transformationNote": "Se conserva tal cual"
+      },
+      {
+        "sourceHeader": "VALOR",
+        "targetHeader": "Importe",
+        "transformationNote": "-185.430,00 → -185430,00 (número real para Excel)"
+      },
+      {
+        "sourceHeader": "SALDO",
+        "targetHeader": "Saldo",
+        "transformationNote": "Mismo formato numérico que el importe"
+      },
+      {
+        "sourceHeader": "SUCURSAL",
+        "targetHeader": "—",
+        "transformationNote": "No se usa en el archivo limpio"
+      }
+    ],
+    "output": {
+      "profile": "excel-clean",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/bancolombia-a-excel.csv",
+      "encoding": "windows-1252",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "bbva-a-excel",
+    "lang": "es",
+    "source": "BBVA",
+    "target": "Excel",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/bbva-a-excel/",
+    "howToExport": [
+      "En la web o la app de BBVA, abre la cuenta y entra en sus movimientos.",
+      "Filtra el periodo que necesitas y usa la opción de descargar en Excel.",
+      "Suelta aquí el Excel tal cual: no hace falta guardarlo como CSV.",
+      "Si ya lo tienes en CSV, también sirve."
+    ],
+    "file": {
+      "delimiter": ";",
+      "decimalStyle": ",",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Fecha",
+          "Fecha operación"
+        ],
+        "description": [
+          "Concepto"
+        ],
+        "memo": [
+          "Observaciones"
+        ],
+        "amount": [
+          "Importe"
+        ],
+        "balance": [
+          "Disponible",
+          "Saldo"
+        ]
+      },
+      "descriptionFrom": [
+        "description",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "La exportación incluye dos fechas: la de operación y la F. Valor (cuando el importe se hace efectivo). Para conciliar gastos se usa la de operación.",
+      "El detalle útil suele repartirse entre Concepto y Observaciones (por ejemplo, el comercio y la tarjeta); el ajuste los une con un guion.",
+      "Antes de la tabla aparecen filas con el titular, la cuenta y el periodo, que rompen cualquier importación; se omiten solas.",
+      "Si lo guardas como CSV, un Excel en español usa punto y coma, coma decimal y codificación ANSI; el limpiador lee igual ese CSV que el Excel original."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Fecha",
+        "targetHeader": "Fecha",
+        "transformationNote": "Fecha de operación, DD/MM/AAAA"
+      },
+      {
+        "sourceHeader": "F.Valor",
+        "targetHeader": "—",
+        "transformationNote": "No se usa"
+      },
+      {
+        "sourceHeader": "Concepto",
+        "targetHeader": "Descripción",
+        "transformationNote": "Primera parte de la descripción"
+      },
+      {
+        "sourceHeader": "Observaciones",
+        "targetHeader": "Descripción",
+        "transformationNote": "Se añade: «Mercadona – Tarjeta 4940 **** 1234»"
+      },
+      {
+        "sourceHeader": "Importe",
+        "targetHeader": "Importe",
+        "transformationNote": "1.250,40 → 1250,40 como número real"
+      },
+      {
+        "sourceHeader": "Disponible",
+        "targetHeader": "Saldo",
+        "transformationNote": "Saldo tras cada movimiento"
+      }
+    ],
+    "output": {
+      "profile": "excel-clean",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/bbva-a-excel.csv",
+      "encoding": "windows-1252",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "caixabank-a-excel",
+    "lang": "es",
+    "source": "CaixaBank",
+    "target": "Excel",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/caixabank-a-excel/",
+    "howToExport": [
+      "En CaixaBankNow (web o app), entra en la cuenta y abre el listado de movimientos.",
+      "En el menú de opciones elige descargar o extraer movimientos, el periodo y el formato Excel.",
+      "Guarda el Excel como CSV y suéltalo aquí."
+    ],
+    "file": {
+      "delimiter": ";",
+      "decimalStyle": ",",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Fecha",
+          "Fecha operación"
+        ],
+        "description": [
+          "Concepto"
+        ],
+        "amount": [
+          "Importe"
+        ],
+        "balance": [
+          "Saldo"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Importes y saldos llevan el símbolo € y punto de miles («-1.250,00 €»); al abrirse como texto, Excel no los suma. El ajuste los convierte en números.",
+      "En este listado, Concepto va antes que la fecha; el ajuste reconoce las columnas por su nombre, no por su posición.",
+      "El signo indica la dirección: con menos es un gasto y sin signo un ingreso, y así se mantiene en el archivo limpio.",
+      "La fila de título con el número de cuenta, previa a la tabla, se omite automáticamente."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Concepto",
+        "targetHeader": "Descripción",
+        "transformationNote": "Texto del movimiento"
+      },
+      {
+        "sourceHeader": "Fecha",
+        "targetHeader": "Fecha",
+        "transformationNote": "DD/MM/AAAA"
+      },
+      {
+        "sourceHeader": "Fecha valor",
+        "targetHeader": "—",
+        "transformationNote": "No se usa"
+      },
+      {
+        "sourceHeader": "Importe",
+        "targetHeader": "Importe",
+        "transformationNote": "«-1.250,00 €» → -1250,00"
+      },
+      {
+        "sourceHeader": "Saldo",
+        "targetHeader": "Saldo",
+        "transformationNote": "Número real, sin €"
+      }
+    ],
+    "output": {
+      "profile": "excel-clean",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/caixabank-a-excel.csv",
+      "encoding": "windows-1252",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "csv-a-iif",
+    "lang": "es",
+    "source": "CSV, Excel o .QBO",
+    "target": "QuickBooks Desktop .IIF",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/csv-a-iif/",
+    "howToExport": [
+      "Descarga el extracto del banco en CSV, Excel (.xls/.xlsx), .QBO, .OFX o .QIF: la herramienta los lee todos.",
+      "Suéltalo aquí y revisa la vista previa, los totales y la comprobación de saldo inicial y final.",
+      "Escribe los nombres exactos de la cuenta bancaria o de tarjeta y de las contrapartidas, tal como aparecen en tu plan de cuentas.",
+      "Descarga primero el archivo de prueba de 5 filas, impórtalo en una empresa con copia de seguridad y luego descarga el archivo completo."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "auto",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "Status",
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "Pending",
+            "Pendiente",
+            "Reverted",
+            "Declined",
+            "Rechazado"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date",
+          "Transaction Date",
+          "Posting Date",
+          "Booking Date",
+          "Completed Date",
+          "Fecha",
+          "Fecha operación",
+          "Fecha de operación",
+          "Fecha valor",
+          "Fecha movimiento"
+        ],
+        "payee": [
+          "Payee",
+          "Name",
+          "Merchant",
+          "Beneficiario",
+          "Nombre",
+          "Comercio"
+        ],
+        "description": [
+          "Description",
+          "Details",
+          "Narrative",
+          "Memo",
+          "Concepto",
+          "Descripción",
+          "Detalle",
+          "Movimiento"
+        ],
+        "amount": [
+          "Amount",
+          "Net",
+          "Value",
+          "Importe",
+          "Monto",
+          "Valor",
+          "Cantidad"
+        ],
+        "debit": [
+          "Debit",
+          "Withdrawal",
+          "Money Out",
+          "Paid out",
+          "Cargo",
+          "Débito",
+          "Retiro",
+          "Egreso"
+        ],
+        "credit": [
+          "Credit",
+          "Deposit",
+          "Money In",
+          "Paid in",
+          "Abono",
+          "Crédito",
+          "Depósito",
+          "Ingreso"
+        ],
+        "reference": [
+          "Reference",
+          "Ref",
+          "Transaction ID",
+          "Referencia",
+          "Documento",
+          "Nº operación"
+        ],
+        "balance": [
+          "Balance",
+          "Running Balance",
+          "Saldo"
+        ],
+        "currency": [
+          "Currency",
+          "Moneda",
+          "Divisa"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "QuickBooks Desktop no permite deshacer una importación .IIF y crea una cuenta nueva con cualquier nombre que no reconozca: escribe los nombres tal cual están en tu plan de cuentas.",
+      "Cada movimiento es una línea TRNS más líneas SPL que deben sumar cero. La herramienta comprueba cada asiento al céntimo y no crea un archivo que no cuadre.",
+      "Las salidas se escriben como CHECK y las entradas como DEPOSIT (CREDIT CARD y CCARD REFUND en cuentas de tarjeta), como en los archivos de ejemplo de Intuit.",
+      "Las fechas van en M/D/AAAA, el formato de QuickBooks Desktop de EE. UU.; elige D/M/AAAA si tu edición es de Reino Unido o Canadá."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Fecha",
+        "targetHeader": "DATE",
+        "transformationNote": "M/D/AAAA, o D/M/AAAA para ediciones de Reino Unido y Canadá"
+      },
+      {
+        "sourceHeader": "Concepto / Beneficiario",
+        "targetHeader": "NAME",
+        "transformationNote": "Opcional: el beneficiario puede ir al MEMO para no crear nombres"
+      },
+      {
+        "sourceHeader": "Importe, o Cargo + Abono",
+        "targetHeader": "TRNS AMOUNT",
+        "transformationNote": "Importe con signo en tu cuenta bancaria o de tarjeta"
+      },
+      {
+        "sourceHeader": "(mismo importe, signo contrario)",
+        "targetHeader": "SPL AMOUNT",
+        "transformationNote": "En tu cuenta de contrapartida, para que el asiento cuadre"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": "iif",
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/csv-a-iif.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "csv-a-qbo",
+    "lang": "es",
+    "source": "CSV o Excel del banco",
+    "target": "QuickBooks .QBO",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/csv-a-qbo/",
+    "howToExport": [
+      "Entra en la banca online desde el ordenador y abre los movimientos de la cuenta.",
+      "Elige el periodo: un mes completo de extracto es lo más fácil de conciliar.",
+      "Descarga en CSV o Excel (.xlsx/.xls). Si el banco ofrece QuickBooks (.QBO), puedes importarlo directamente.",
+      "Suelta el archivo aquí, compara los totales con tu extracto y elige tu banco en los ajustes del .QBO."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "auto",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "Status",
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "Pending",
+            "Pendiente",
+            "Reverted",
+            "Declined",
+            "Rechazado"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date",
+          "Transaction Date",
+          "Posting Date",
+          "Booking Date",
+          "Completed Date",
+          "Fecha",
+          "Fecha operación",
+          "Fecha de operación",
+          "Fecha valor",
+          "Fecha movimiento"
+        ],
+        "payee": [
+          "Payee",
+          "Name",
+          "Merchant",
+          "Beneficiario",
+          "Nombre",
+          "Comercio"
+        ],
+        "description": [
+          "Description",
+          "Details",
+          "Narrative",
+          "Memo",
+          "Concepto",
+          "Descripción",
+          "Detalle",
+          "Movimiento"
+        ],
+        "amount": [
+          "Amount",
+          "Net",
+          "Value",
+          "Importe",
+          "Monto",
+          "Valor",
+          "Cantidad"
+        ],
+        "debit": [
+          "Debit",
+          "Withdrawal",
+          "Money Out",
+          "Paid out",
+          "Cargo",
+          "Débito",
+          "Retiro",
+          "Egreso"
+        ],
+        "credit": [
+          "Credit",
+          "Deposit",
+          "Money In",
+          "Paid in",
+          "Abono",
+          "Crédito",
+          "Depósito",
+          "Ingreso"
+        ],
+        "reference": [
+          "Reference",
+          "Ref",
+          "Transaction ID",
+          "Referencia",
+          "Documento",
+          "Nº operación"
+        ],
+        "balance": [
+          "Balance",
+          "Running Balance",
+          "Saldo"
+        ],
+        "currency": [
+          "Currency",
+          "Moneda",
+          "Divisa"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "QuickBooks Desktop comprueba el ID de banco de Intuit (INTU.BID) del archivo y se detiene con bancos desconocidos. Elige el tuyo de la lista, que sale del directorio Web Connect de la propia Intuit.",
+      "QuickBooks omite un movimiento cuyo FITID ya importó en esa cuenta. La herramienta da siempre el mismo ID al mismo movimiento, e ID distintos a dos cargos idénticos del mismo día.",
+      "Los .QBO se declaran US-ASCII, así que tildes y símbolos se convierten a letras simples («Nómina» → «Nomina»); el beneficiario se corta a 32 caracteres y el concepto a 255.",
+      "Los importes con coma decimal y punto de miles (1.234,56) se leen bien y se escriben con punto, como exige el formato."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Fecha",
+        "targetHeader": "<DTPOSTED>",
+        "transformationNote": "DD/MM/AAAA leído tal cual, escrito como AAAAMMDD a mediodía GMT"
+      },
+      {
+        "sourceHeader": "Concepto / Beneficiario",
+        "targetHeader": "<NAME>",
+        "transformationNote": "Primeros 32 caracteres, sin tildes"
+      },
+      {
+        "sourceHeader": "Resto del concepto, referencia",
+        "targetHeader": "<MEMO>",
+        "transformationNote": "Hasta 255 caracteres"
+      },
+      {
+        "sourceHeader": "Importe, o Cargo + Abono",
+        "targetHeader": "<TRNAMT>, <TRNTYPE>",
+        "transformationNote": "Importe con signo y punto decimal; CREDIT entradas, DEBIT salidas"
+      },
+      {
+        "sourceHeader": "(calculado)",
+        "targetHeader": "<FITID>",
+        "transformationNote": "Fecha + hash de 16 caracteres de fecha, importe, beneficiario y concepto"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": "qbo",
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/csv-a-qbo.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "mercadopago-a-excel",
+    "lang": "es",
+    "source": "Mercado Pago",
+    "target": "Excel",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/mercadopago-a-excel/",
+    "howToExport": [
+      "En tu cuenta de Mercado Pago, entra en la sección de reportes y elige el reporte de dinero liberado (liquidaciones).",
+      "Selecciona el periodo y genera el reporte en formato CSV.",
+      "Descárgalo cuando esté listo y suéltalo aquí."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "RECORD_TYPE",
+            "TIPO DE REGISTRO"
+          ],
+          "values": [
+            "initial_available_balance",
+            "total"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "DATE",
+          "FECHA"
+        ],
+        "description": [
+          "DESCRIPTION",
+          "DESCRIPCIÓN"
+        ],
+        "reference": [
+          "EXTERNAL_REFERENCE",
+          "SOURCE_ID",
+          "REFERENCIA EXTERNA"
+        ],
+        "credit": [
+          "NET_CREDIT_AMOUNT"
+        ],
+        "debit": [
+          "NET_DEBIT_AMOUNT"
+        ],
+        "gross": [
+          "GROSS_AMOUNT"
+        ],
+        "fee": [
+          "MP_FEE_AMOUNT"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "El reporte trae filas que no son movimientos: el saldo disponible inicial y el total del periodo (RECORD_TYPE initial_available_balance y total). Se excluyen para no duplicar importes.",
+      "El neto se reparte en dos columnas, NET_CREDIT_AMOUNT y NET_DEBIT_AMOUNT; el ajuste las combina en un neto con signo.",
+      "Las fechas incluyen hora y zona horaria (2024-03-02T10:15:22.000-03:00); se conserva la fecha de liberación, que es cuando el dinero afecta tu saldo.",
+      "La descripción llega como código (payment, shipping_cancel, tax_payment_ibex…) y se muestra en forma legible."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "DATE",
+        "targetHeader": "Fecha",
+        "transformationNote": "Fecha de liberación, sin hora ni zona"
+      },
+      {
+        "sourceHeader": "DESCRIPTION",
+        "targetHeader": "Descripción",
+        "transformationNote": "shipping_cancel → Shipping cancel"
+      },
+      {
+        "sourceHeader": "EXTERNAL_REFERENCE",
+        "targetHeader": "Referencia",
+        "transformationNote": "Tu número de pedido; si falta, SOURCE_ID"
+      },
+      {
+        "sourceHeader": "GROSS_AMOUNT",
+        "targetHeader": "Bruto",
+        "transformationNote": "Importe antes de deducciones"
+      },
+      {
+        "sourceHeader": "MP_FEE_AMOUNT",
+        "targetHeader": "Comisión",
+        "transformationNote": "Comisión de Mercado Pago o Mercado Libre"
+      },
+      {
+        "sourceHeader": "NET_CREDIT_AMOUNT / NET_DEBIT_AMOUNT",
+        "targetHeader": "Neto",
+        "transformationNote": "Crédito menos débito, con signo"
+      },
+      {
+        "sourceHeader": "RECORD_TYPE",
+        "targetHeader": "—",
+        "transformationNote": "Saldo inicial y total excluidos"
+      }
+    ],
+    "output": {
+      "profile": "excel-clean",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/mercadopago-a-excel.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "n26-a-ynab",
+    "lang": "es",
+    "source": "N26",
+    "target": "YNAB",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/n26-a-ynab/",
+    "howToExport": [
+      "Abre N26 en el navegador: la descarga CSV se ofrece en la app web.",
+      "Elige la cuenta o el Espacio, entra en Descargas y, en la actividad de la cuenta, indica el rango de fechas.",
+      "Elige CSV, descarga el archivo y suéltalo aquí."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "auto",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Booking Date",
+          "Date",
+          "Buchungsdatum",
+          "Datum"
+        ],
+        "payee": [
+          "Partner Name",
+          "Payee",
+          "Empfänger"
+        ],
+        "memo": [
+          "Payment Reference",
+          "Payment reference",
+          "Verwendungszweck"
+        ],
+        "amount": [
+          "Amount (EUR)",
+          "Betrag (EUR)",
+          "Amount"
+        ]
+      },
+      "descriptionFrom": [
+        "payee"
+      ]
+    },
+    "knownQuirks": [
+      "Las exportaciones de N26 traen dos fechas, Booking Date y Value Date, y YNAB necesita una. Se usa la de contabilización, el día en que el movimiento entró en tu cuenta.",
+      "La contraparte está en Partner Name (Payee en exportaciones antiguas) y el concepto en Payment Reference; YNAB los guarda por separado como Payee y Memo.",
+      "Los pagos con tarjeta en otra divisa ya vienen convertidos a EUR, con el importe original en columnas aparte; solo se importa el importe en EUR.",
+      "Los nombres de las columnas y el formato decimal cambian según la versión y el idioma de la exportación; el ajuste reconoce ambos."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Booking Date",
+        "targetHeader": "Date",
+        "transformationNote": "AAAA-MM-DD; Value Date se ignora"
+      },
+      {
+        "sourceHeader": "Partner Name",
+        "targetHeader": "Payee",
+        "transformationNote": "Contraparte o comercio"
+      },
+      {
+        "sourceHeader": "Payment Reference",
+        "targetHeader": "Memo",
+        "transformationNote": "Concepto del pago"
+      },
+      {
+        "sourceHeader": "Amount (EUR)",
+        "targetHeader": "Outflow / Inflow",
+        "transformationNote": "Separado en Outflow e Inflow positivos"
+      },
+      {
+        "sourceHeader": "Partner Iban / Type / Original Amount",
+        "targetHeader": "—",
+        "transformationNote": "YNAB no los necesita"
+      }
+    ],
+    "output": {
+      "profile": "ynab",
+      "accountingFile": null,
+      "dateFormat": "YYYY-MM-DD"
+    },
+    "sample": {
+      "file": "samples/es/n26-a-ynab.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "paypal-a-quickbooks",
+    "lang": "es",
+    "source": "PayPal",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/paypal-a-quickbooks/",
+    "howToExport": [
+      "Entra en PayPal desde el navegador y abre la sección de actividad (Historial).",
+      "Pulsa Descargar, elige Personalizado y el rango de fechas (hasta 12 meses por solicitud).",
+      "Selecciona CSV como formato, descarga el informe cuando esté listo y suéltalo aquí."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": "auto",
+      "dateOrder": "auto",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [
+        {
+          "columns": [
+            "Estado",
+            "Status"
+          ],
+          "values": [
+            "Pendiente",
+            "Denegado",
+            "Anulado",
+            "Pending",
+            "Denied",
+            "Voided"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Fecha",
+          "Date"
+        ],
+        "payee": [
+          "Nombre",
+          "Name"
+        ],
+        "description": [
+          "Tipo",
+          "Type"
+        ],
+        "amount": [
+          "Neto",
+          "Net"
+        ],
+        "currency": [
+          "Divisa",
+          "Moneda",
+          "Currency"
+        ],
+        "reference": [
+          "Id. de transacción",
+          "Código de transacción",
+          "Transaction ID"
+        ],
+        "balance": [
+          "Saldo",
+          "Balance"
+        ],
+        "gross": [
+          "Gross",
+          "Bruto",
+          "Importe bruto"
+        ],
+        "fee": [
+          "Fee",
+          "Tarifa",
+          "Comisión"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "En cuentas de España y Latinoamérica los importes pueden venir con coma decimal y punto de miles («1.250,00»), que QuickBooks no acepta; el ajuste los escribe como 1250.00.",
+      "Las retenciones y pagos sin liquidar aparecen con Estado «Pendiente»; si se importan, se cuenta dinero que nunca llegó. Se quitan las filas Pendiente, Denegado y Anulado.",
+      "El Bruto incluye la comisión de PayPal y el Neto es lo que llegó a tu saldo; QuickBooks concilia contra el saldo de PayPal, así que se usa el Neto.",
+      "Los encabezados salen en el idioma de tu cuenta; el ajuste reconoce los nombres en español y en inglés."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Fecha",
+        "targetHeader": "Date",
+        "transformationNote": "DD/MM/AAAA"
+      },
+      {
+        "sourceHeader": "Nombre",
+        "targetHeader": "Description",
+        "transformationNote": "Se une con el Tipo: «Lucía Romero – Pago de comercio electrónico»"
+      },
+      {
+        "sourceHeader": "Tipo",
+        "targetHeader": "Description",
+        "transformationNote": "Segunda parte de la descripción"
+      },
+      {
+        "sourceHeader": "Neto",
+        "targetHeader": "Amount",
+        "transformationNote": "Comisión ya descontada; coma decimal → punto"
+      },
+      {
+        "sourceHeader": "Estado",
+        "targetHeader": "—",
+        "transformationNote": "Pendiente, Denegado y Anulado se quitan"
+      },
+      {
+        "sourceHeader": "Bruto / Comisión / Saldo",
+        "targetHeader": "—",
+        "transformationNote": "No forman parte del formato de 3 columnas"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/paypal-a-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "revolut-a-quickbooks",
+    "lang": "es",
+    "source": "Revolut",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/revolut-a-quickbooks/",
+    "howToExport": [
+      "En Revolut, elige la cuenta de la divisa que vas a contabilizar: una cuenta bancaria de QuickBooks por cada divisa mantiene los saldos cuadrados.",
+      "Abre su opción de Extracto, elige el formato de hoja de cálculo en lugar de PDF y el periodo contable.",
+      "Descarga el CSV y suéltalo aquí; no necesita retoques previos."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": true,
+      "excludeRows": [
+        {
+          "columns": [
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "PENDING",
+            "REVERTED",
+            "DECLINED",
+            "FAILED",
+            "PENDIENTE",
+            "REVERTIDO",
+            "RECHAZADO",
+            "FALLIDO"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Completed Date",
+          "Fecha de finalización",
+          "Fecha de completado",
+          "Started Date",
+          "Fecha de inicio"
+        ],
+        "description": [
+          "Description",
+          "Descripción"
+        ],
+        "memo": [
+          "Type",
+          "Tipo"
+        ],
+        "amount": [
+          "Amount",
+          "Importe",
+          "Cantidad"
+        ],
+        "fee": [
+          "Fee",
+          "Comisión",
+          "Tarifa"
+        ],
+        "currency": [
+          "Currency",
+          "Divisa",
+          "Moneda"
+        ],
+        "balance": [
+          "Balance",
+          "Saldo"
+        ]
+      },
+      "descriptionFrom": [
+        "description",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "La columna Type (CARD_PAYMENT, TOPUP, TRANSFER, EXCHANGE…) aporta el contexto que necesitan las reglas bancarias de QuickBooks, pero en mayúsculas; el ajuste la añade a la descripción de forma legible.",
+      "Las recargas desde tu propio banco parecen ingresos en el CSV; en QuickBooks deben conciliarse como transferencias, no como ventas.",
+      "Cada cambio de divisa crea una fila en cada moneda. Con una cuenta de QuickBooks por divisa, sube cada lado a su cuenta eligiendo la moneda en el selector.",
+      "Started Date y Completed Date incluyen la hora; QuickBooks quiere una sola fecha, así que se usa la de liquidación (Completed Date)."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Completed Date",
+        "targetHeader": "Date",
+        "transformationNote": "DD/MM/AAAA, sin hora"
+      },
+      {
+        "sourceHeader": "Description",
+        "targetHeader": "Description",
+        "transformationNote": "Primera parte de la descripción"
+      },
+      {
+        "sourceHeader": "Type",
+        "targetHeader": "Description",
+        "transformationNote": "Legible y añadido: «Movistar Fibra – Card payment»"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Amount",
+        "transformationNote": "Importe con signo y punto decimal"
+      },
+      {
+        "sourceHeader": "Fee",
+        "targetHeader": "Amount",
+        "transformationNote": "Se resta para que QuickBooks cuadre con el saldo de Revolut"
+      },
+      {
+        "sourceHeader": "State",
+        "targetHeader": "—",
+        "transformationNote": "Solo se conservan las filas COMPLETED"
+      },
+      {
+        "sourceHeader": "Product / Balance / Currency",
+        "targetHeader": "—",
+        "transformationNote": "No forman parte del formato de 3 columnas"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/revolut-a-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "revolut-a-ynab",
+    "lang": "es",
+    "source": "Revolut",
+    "target": "YNAB",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/revolut-a-ynab/",
+    "howToExport": [
+      "Abre Revolut (app o web), elige la cuenta con la que haces el presupuesto y entra en su opción de Extracto.",
+      "Elige el formato de hoja de cálculo (CSV / Excel) en lugar de PDF y el periodo que quieres importar.",
+      "Genera y descarga el archivo; repítelo por cada mes si guardas extractos mensuales.",
+      "Suelta el archivo (o varios meses a la vez) en la herramienta de arriba."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": true,
+      "excludeRows": [
+        {
+          "columns": [
+            "State",
+            "Estado"
+          ],
+          "values": [
+            "PENDING",
+            "REVERTED",
+            "DECLINED",
+            "FAILED",
+            "PENDIENTE",
+            "REVERTIDO",
+            "RECHAZADO",
+            "FALLIDO"
+          ]
+        }
+      ],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Completed Date",
+          "Fecha de finalización",
+          "Fecha de completado",
+          "Started Date",
+          "Fecha de inicio"
+        ],
+        "description": [
+          "Description",
+          "Descripción"
+        ],
+        "amount": [
+          "Amount",
+          "Importe",
+          "Cantidad"
+        ],
+        "fee": [
+          "Fee",
+          "Comisión",
+          "Tarifa"
+        ],
+        "currency": [
+          "Currency",
+          "Divisa",
+          "Moneda"
+        ],
+        "balance": [
+          "Balance",
+          "Saldo"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Los pagos con tarjeta aún no liquidados se exportan con la columna Completed Date vacía y State PENDING; si se importan, crean movimientos que luego cambian o desaparecen. El ajuste quita las filas PENDING, REVERTED, DECLINED y FAILED.",
+      "Las comisiones van en una columna Fee aparte (por ejemplo, en los cambios de divisa), así que Amount por sí sola no cuadra con tu saldo. El ajuste resta la comisión de cada importe.",
+      "Un mismo extracto puede mezclar monedas: un cambio de divisa crea filas en ambas. Una cuenta de YNAB solo admite una moneda, así que se conserva la más frecuente y puedes elegir otra.",
+      "Si tu exportación sale con los encabezados traducidos (Fecha de finalización, Descripción, Importe, Comisión…), el ajuste también los reconoce."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Completed Date",
+        "targetHeader": "Date",
+        "transformationNote": "Se quita la hora y se usa la fecha de liquidación en lugar de Started Date"
+      },
+      {
+        "sourceHeader": "Description",
+        "targetHeader": "Payee",
+        "transformationNote": "Nombre del comercio o de la contraparte, sin espacios sobrantes"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Outflow / Inflow",
+        "transformationNote": "Los importes negativos van a Outflow y los positivos a Inflow, ambos en positivo"
+      },
+      {
+        "sourceHeader": "Fee",
+        "targetHeader": "Outflow / Inflow",
+        "transformationNote": "Se resta del importe antes de separarlo"
+      },
+      {
+        "sourceHeader": "State",
+        "targetHeader": "—",
+        "transformationNote": "Se quitan las filas PENDING, REVERTED, DECLINED y FAILED"
+      },
+      {
+        "sourceHeader": "Currency",
+        "targetHeader": "—",
+        "transformationNote": "Sirve para dejar una sola moneda por archivo"
+      },
+      {
+        "sourceHeader": "Type / Product / Balance",
+        "targetHeader": "—",
+        "transformationNote": "YNAB no los necesita"
+      }
+    ],
+    "output": {
+      "profile": "ynab",
+      "accountingFile": null,
+      "dateFormat": "YYYY-MM-DD"
+    },
+    "sample": {
+      "file": "samples/es/revolut-a-ynab.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "santander-a-excel",
+    "lang": "es",
+    "source": "Banco Santander",
+    "target": "Excel",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/santander-a-excel/",
+    "howToExport": [
+      "En la app o la web de Santander, abre la cuenta y consulta sus movimientos (la app muestra hasta dos años).",
+      "Filtra el periodo y descárgalo en Excel.",
+      "Suelta aquí el archivo descargado tal cual, aunque Excel avise de que el formato no coincide con la extensión (algunos XLS son HTML).",
+      "También puedes soltar el CSV si ya lo guardaste desde Excel."
+    ],
+    "file": {
+      "delimiter": ";",
+      "decimalStyle": ",",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Fecha operación",
+          "Fecha Operación",
+          "Fecha"
+        ],
+        "description": [
+          "Concepto"
+        ],
+        "amount": [
+          "Importe"
+        ],
+        "balance": [
+          "Saldo"
+        ]
+      },
+      "descriptionFrom": [
+        "description"
+      ]
+    },
+    "knownQuirks": [
+      "Importes y saldos pueden venir como texto con la moneda pegada («-25,40 EUR»), así que Excel no los suma; el ajuste quita la moneda y los convierte en números.",
+      "Hay usuarios que reportan que el «XLS» descargado es HTML con extensión .xls; el limpiador lo lee directamente, sin abrirlo en Excel.",
+      "Las tildes de los conceptos se rompen al pasar el CSV entre programas (ANSI frente a UTF-8); se recuperan automáticamente.",
+      "Santander indica que los movimientos de más de dos años se piden en oficina; si te los entregan en Excel o CSV, también se limpian aquí."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Fecha operación",
+        "targetHeader": "Fecha",
+        "transformationNote": "DD/MM/AAAA"
+      },
+      {
+        "sourceHeader": "Fecha valor",
+        "targetHeader": "—",
+        "transformationNote": "No se usa"
+      },
+      {
+        "sourceHeader": "Concepto",
+        "targetHeader": "Descripción",
+        "transformationNote": "Tildes recuperadas"
+      },
+      {
+        "sourceHeader": "Importe",
+        "targetHeader": "Importe",
+        "transformationNote": "«-25,40 EUR» → -25,40 como número"
+      },
+      {
+        "sourceHeader": "Saldo",
+        "targetHeader": "Saldo",
+        "transformationNote": "Sin «EUR», como número"
+      }
+    ],
+    "output": {
+      "profile": "excel-clean",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/santander-a-excel.csv",
+      "encoding": "windows-1252",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "stripe-a-quickbooks",
+    "lang": "es",
+    "source": "Stripe",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/stripe-a-quickbooks/",
+    "howToExport": [
+      "En el Dashboard de Stripe, abre los reportes de saldo y elige el periodo que vas a cerrar.",
+      "Descarga el CSV detallado de cambios de saldo (el detallado, no el resumen).",
+      "Deja las columnas por defecto o añade metadatos; el ajuste solo lee lo que necesita QuickBooks. Suelta el archivo aquí."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "YMD",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "created_utc",
+          "Created (UTC)",
+          "created",
+          "Created date (UTC)"
+        ],
+        "description": [
+          "description",
+          "Description"
+        ],
+        "memo": [
+          "reporting_category",
+          "Type",
+          "type"
+        ],
+        "amount": [
+          "net",
+          "Net"
+        ],
+        "reference": [
+          "balance_transaction_id",
+          "id",
+          "source_id",
+          "Source"
+        ],
+        "currency": [
+          "currency",
+          "Currency"
+        ],
+        "gross": [
+          "gross",
+          "Gross",
+          "Amount"
+        ],
+        "fee": [
+          "fee",
+          "Fee"
+        ]
+      },
+      "descriptionFrom": [
+        "description",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "Las horas están en UTC (2024-04-11 22:41:55), así que una venta nocturna en Latinoamérica puede caer al día siguiente; el ajuste mantiene la fecha UTC que informa Stripe.",
+      "Cada fila tiene gross, fee y net. QuickBooks concilia contra lo que llega a tu saldo de Stripe, así que se usa el neto.",
+      "Los pagos a tu banco aparecen como filas negativas (categoría payout): dinero que sale de Stripe y debe conciliarse como transferencia, no como gasto.",
+      "Los metadatos personalizados pueden añadir decenas de columnas; ninguna hace falta para la carga de 3 columnas."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "created_utc",
+        "targetHeader": "Date",
+        "transformationNote": "Marca de tiempo UTC → DD/MM/AAAA"
+      },
+      {
+        "sourceHeader": "description",
+        "targetHeader": "Description",
+        "transformationNote": "Descripción del cobro o la factura"
+      },
+      {
+        "sourceHeader": "reporting_category",
+        "targetHeader": "Description",
+        "transformationNote": "Se añade: «Factura 2024-118 – Charge»"
+      },
+      {
+        "sourceHeader": "net",
+        "targetHeader": "Amount",
+        "transformationNote": "Neto de comisiones; los payouts en negativo"
+      },
+      {
+        "sourceHeader": "gross / fee",
+        "targetHeader": "—",
+        "transformationNote": "No se usan en el formato de 3 columnas"
+      },
+      {
+        "sourceHeader": "balance_transaction_id / available_on_utc",
+        "targetHeader": "—",
+        "transformationNote": "Se eliminan"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/stripe-a-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  },
+  {
+    "id": "wise-a-quickbooks",
+    "lang": "es",
+    "source": "Wise",
+    "target": "QuickBooks Online",
+    "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/wise-a-quickbooks/",
+    "howToExport": [
+      "En Wise, abre el saldo de la divisa que quieres importar y ve a sus extractos.",
+      "Elige el periodo y CSV como tipo de archivo; las cuentas de empresa pueden añadir columnas extra, que el ajuste ignora.",
+      "Descarga un archivo por cada saldo de divisa y suéltalo aquí."
+    ],
+    "file": {
+      "delimiter": "auto",
+      "decimalStyle": ".",
+      "dateOrder": "DMY",
+      "skipTopRows": 0,
+      "moneyOutIsPositive": false,
+      "feeAlreadySubtracted": false,
+      "excludeRows": [],
+      "sectionFilter": null,
+      "columns": {
+        "date": [
+          "Date",
+          "Fecha"
+        ],
+        "payee": [
+          "Merchant",
+          "Payee Name",
+          "Payer Name"
+        ],
+        "memo": [
+          "Payment Reference",
+          "Reference"
+        ],
+        "description": [
+          "Description"
+        ],
+        "amount": [
+          "Amount"
+        ],
+        "reference": [
+          "TransferWise ID"
+        ],
+        "currency": [
+          "Currency"
+        ],
+        "balance": [
+          "Running Balance"
+        ],
+        "fee": [
+          "Total fees",
+          "Comisiones totales"
+        ]
+      },
+      "descriptionFrom": [
+        "payee",
+        "memo"
+      ]
+    },
+    "knownQuirks": [
+      "Cada fila trae datos de conversión (Exchange From, Exchange To, Exchange Rate) que la carga de 3 columnas de QuickBooks no admite; se eliminan.",
+      "La contraparte está en una columna distinta según la dirección: Payee Name en pagos, Payer Name en cobros y Merchant en compras con tarjeta. El ajuste lee la que esté rellena en cada fila.",
+      "La Description de Wise («Card transaction of 32.60 EUR issued by…») repite el importe; contraparte más referencia da una descripción más estable, con la original como respaldo.",
+      "Cada extracto corresponde a un saldo en una divisa, así que va a una cuenta de QuickBooks en esa misma divisa."
+    ],
+    "columnMapping": [
+      {
+        "sourceHeader": "Date",
+        "targetHeader": "Date",
+        "transformationNote": "DD/MM/AAAA (MM/DD/YYYY para empresas de EE. UU.)"
+      },
+      {
+        "sourceHeader": "Merchant / Payee Name / Payer Name",
+        "targetHeader": "Description",
+        "transformationNote": "Primera contraparte no vacía de cada fila"
+      },
+      {
+        "sourceHeader": "Payment Reference",
+        "targetHeader": "Description",
+        "transformationNote": "Se añade: «Studio Lumen – FAC-2024-031»"
+      },
+      {
+        "sourceHeader": "Amount",
+        "targetHeader": "Amount",
+        "transformationNote": "Importe con signo y punto decimal"
+      },
+      {
+        "sourceHeader": "Exchange From / To / Rate",
+        "targetHeader": "—",
+        "transformationNote": "Se eliminan: QuickBooks no los admite"
+      },
+      {
+        "sourceHeader": "TransferWise ID / Running Balance",
+        "targetHeader": "—",
+        "transformationNote": "No forman parte del formato de 3 columnas"
+      }
+    ],
+    "output": {
+      "profile": "qbo-3col",
+      "accountingFile": null,
+      "dateFormat": "DD/MM/YYYY"
+    },
+    "sample": {
+      "file": "samples/es/wise-a-quickbooks.csv",
+      "encoding": "utf-8",
+      "synthetic": true
+    }
+  }
+]

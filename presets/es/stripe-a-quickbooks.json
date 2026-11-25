@@ -1,0 +1,114 @@
+{
+  "id": "stripe-a-quickbooks",
+  "lang": "es",
+  "source": "Stripe",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/stripe-a-quickbooks/",
+  "howToExport": [
+    "En el Dashboard de Stripe, abre los reportes de saldo y elige el periodo que vas a cerrar.",
+    "Descarga el CSV detallado de cambios de saldo (el detallado, no el resumen).",
+    "Deja las columnas por defecto o añade metadatos; el ajuste solo lee lo que necesita QuickBooks. Suelta el archivo aquí."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "created_utc",
+        "Created (UTC)",
+        "created",
+        "Created date (UTC)"
+      ],
+      "description": [
+        "description",
+        "Description"
+      ],
+      "memo": [
+        "reporting_category",
+        "Type",
+        "type"
+      ],
+      "amount": [
+        "net",
+        "Net"
+      ],
+      "reference": [
+        "balance_transaction_id",
+        "id",
+        "source_id",
+        "Source"
+      ],
+      "currency": [
+        "currency",
+        "Currency"
+      ],
+      "gross": [
+        "gross",
+        "Gross",
+        "Amount"
+      ],
+      "fee": [
+        "fee",
+        "Fee"
+      ]
+    },
+    "descriptionFrom": [
+      "description",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "Las horas están en UTC (2024-04-11 22:41:55), así que una venta nocturna en Latinoamérica puede caer al día siguiente; el ajuste mantiene la fecha UTC que informa Stripe.",
+    "Cada fila tiene gross, fee y net. QuickBooks concilia contra lo que llega a tu saldo de Stripe, así que se usa el neto.",
+    "Los pagos a tu banco aparecen como filas negativas (categoría payout): dinero que sale de Stripe y debe conciliarse como transferencia, no como gasto.",
+    "Los metadatos personalizados pueden añadir decenas de columnas; ninguna hace falta para la carga de 3 columnas."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "created_utc",
+      "targetHeader": "Date",
+      "transformationNote": "Marca de tiempo UTC → DD/MM/AAAA"
+    },
+    {
+      "sourceHeader": "description",
+      "targetHeader": "Description",
+      "transformationNote": "Descripción del cobro o la factura"
+    },
+    {
+      "sourceHeader": "reporting_category",
+      "targetHeader": "Description",
+      "transformationNote": "Se añade: «Factura 2024-118 – Charge»"
+    },
+    {
+      "sourceHeader": "net",
+      "targetHeader": "Amount",
+      "transformationNote": "Neto de comisiones; los payouts en negativo"
+    },
+    {
+      "sourceHeader": "gross / fee",
+      "targetHeader": "—",
+      "transformationNote": "No se usan en el formato de 3 columnas"
+    },
+    {
+      "sourceHeader": "balance_transaction_id / available_on_utc",
+      "targetHeader": "—",
+      "transformationNote": "Se eliminan"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/stripe-a-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

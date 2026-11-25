@@ -1,0 +1,7 @@
+balance_transaction_id,created_utc,available_on_utc,currency,gross,fee,net,reporting_category,source_id,description,customer_email
+txn_3P1aB2CxyZ,2024-04-01 14:22:05,2024-04-03 00:00:00,usd,120.00,3.78,116.22,charge,ch_3P1aB2CxyZ,Invoice 1043,ana@example.com
+txn_3P1aB9ZqrS,2024-04-02 03:10:44,2024-04-04 00:00:00,usd,49.00,1.72,47.28,charge,ch_3P1aB9ZqrS,Pro plan monthly,lee@example.com
+txn_3P1aC1DmnO,2024-04-03 18:00:00,2024-04-03 18:00:00,usd,-49.00,0.00,-49.00,refund,re_3P1aC1DmnO,Refund for Pro plan monthly,lee@example.com
+txn_1P1aPAYabc,2024-04-05 00:05:00,2024-04-05 00:05:00,usd,-114.50,0.00,-114.50,payout,po_1P1aPAYabc,STRIPE PAYOUT,
+txn_3P1aD7QklM,2024-04-06 21:47:13,2024-04-08 00:00:00,usd,300.00,9.00,291.00,charge,ch_3P1aD7QklM,Invoice 1044,mo@example.com
+txn_1P1aFEEdef,2024-04-07 00:00:00,2024-04-07 00:00:00,usd,-2.00,0.00,-2.00,fee,,Radar fees,

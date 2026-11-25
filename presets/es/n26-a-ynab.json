@@ -1,0 +1,91 @@
+{
+  "id": "n26-a-ynab",
+  "lang": "es",
+  "source": "N26",
+  "target": "YNAB",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/n26-a-ynab/",
+  "howToExport": [
+    "Abre N26 en el navegador: la descarga CSV se ofrece en la app web.",
+    "Elige la cuenta o el Espacio, entra en Descargas y, en la actividad de la cuenta, indica el rango de fechas.",
+    "Elige CSV, descarga el archivo y suéltalo aquí."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "auto",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Booking Date",
+        "Date",
+        "Buchungsdatum",
+        "Datum"
+      ],
+      "payee": [
+        "Partner Name",
+        "Payee",
+        "Empfänger"
+      ],
+      "memo": [
+        "Payment Reference",
+        "Payment reference",
+        "Verwendungszweck"
+      ],
+      "amount": [
+        "Amount (EUR)",
+        "Betrag (EUR)",
+        "Amount"
+      ]
+    },
+    "descriptionFrom": [
+      "payee"
+    ]
+  },
+  "knownQuirks": [
+    "Las exportaciones de N26 traen dos fechas, Booking Date y Value Date, y YNAB necesita una. Se usa la de contabilización, el día en que el movimiento entró en tu cuenta.",
+    "La contraparte está en Partner Name (Payee en exportaciones antiguas) y el concepto en Payment Reference; YNAB los guarda por separado como Payee y Memo.",
+    "Los pagos con tarjeta en otra divisa ya vienen convertidos a EUR, con el importe original en columnas aparte; solo se importa el importe en EUR.",
+    "Los nombres de las columnas y el formato decimal cambian según la versión y el idioma de la exportación; el ajuste reconoce ambos."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Booking Date",
+      "targetHeader": "Date",
+      "transformationNote": "AAAA-MM-DD; Value Date se ignora"
+    },
+    {
+      "sourceHeader": "Partner Name",
+      "targetHeader": "Payee",
+      "transformationNote": "Contraparte o comercio"
+    },
+    {
+      "sourceHeader": "Payment Reference",
+      "targetHeader": "Memo",
+      "transformationNote": "Concepto del pago"
+    },
+    {
+      "sourceHeader": "Amount (EUR)",
+      "targetHeader": "Outflow / Inflow",
+      "transformationNote": "Separado en Outflow e Inflow positivos"
+    },
+    {
+      "sourceHeader": "Partner Iban / Type / Original Amount",
+      "targetHeader": "—",
+      "transformationNote": "YNAB no los necesita"
+    }
+  ],
+  "output": {
+    "profile": "ynab",
+    "accountingFile": null,
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "sample": {
+    "file": "samples/es/n26-a-ynab.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

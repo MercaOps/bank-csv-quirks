@@ -1,0 +1,85 @@
+{
+  "id": "santander-a-excel",
+  "lang": "es",
+  "source": "Banco Santander",
+  "target": "Excel",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/santander-a-excel/",
+  "howToExport": [
+    "En la app o la web de Santander, abre la cuenta y consulta sus movimientos (la app muestra hasta dos años).",
+    "Filtra el periodo y descárgalo en Excel.",
+    "Suelta aquí el archivo descargado tal cual, aunque Excel avise de que el formato no coincide con la extensión (algunos XLS son HTML).",
+    "También puedes soltar el CSV si ya lo guardaste desde Excel."
+  ],
+  "file": {
+    "delimiter": ";",
+    "decimalStyle": ",",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Fecha operación",
+        "Fecha Operación",
+        "Fecha"
+      ],
+      "description": [
+        "Concepto"
+      ],
+      "amount": [
+        "Importe"
+      ],
+      "balance": [
+        "Saldo"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Importes y saldos pueden venir como texto con la moneda pegada («-25,40 EUR»), así que Excel no los suma; el ajuste quita la moneda y los convierte en números.",
+    "Hay usuarios que reportan que el «XLS» descargado es HTML con extensión .xls; el limpiador lo lee directamente, sin abrirlo en Excel.",
+    "Las tildes de los conceptos se rompen al pasar el CSV entre programas (ANSI frente a UTF-8); se recuperan automáticamente.",
+    "Santander indica que los movimientos de más de dos años se piden en oficina; si te los entregan en Excel o CSV, también se limpian aquí."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Fecha operación",
+      "targetHeader": "Fecha",
+      "transformationNote": "DD/MM/AAAA"
+    },
+    {
+      "sourceHeader": "Fecha valor",
+      "targetHeader": "—",
+      "transformationNote": "No se usa"
+    },
+    {
+      "sourceHeader": "Concepto",
+      "targetHeader": "Descripción",
+      "transformationNote": "Tildes recuperadas"
+    },
+    {
+      "sourceHeader": "Importe",
+      "targetHeader": "Importe",
+      "transformationNote": "«-25,40 EUR» → -25,40 como número"
+    },
+    {
+      "sourceHeader": "Saldo",
+      "targetHeader": "Saldo",
+      "transformationNote": "Sin «EUR», como número"
+    }
+  ],
+  "output": {
+    "profile": "excel-clean",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/santander-a-excel.csv",
+    "encoding": "windows-1252",
+    "synthetic": true
+  }
+}

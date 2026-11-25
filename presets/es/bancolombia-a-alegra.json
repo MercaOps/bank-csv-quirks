@@ -1,0 +1,107 @@
+{
+  "id": "bancolombia-a-alegra",
+  "lang": "es",
+  "source": "Bancolombia",
+  "target": "Alegra .xlsx",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/bancolombia-a-alegra/",
+  "howToExport": [
+    "Entra en la Sucursal Virtual Personas de Bancolombia y abre la cuenta desde la sección de saldos y movimientos o de documentos.",
+    "Elige el periodo y pulsa Descargar en formato XLS (Excel); el PDF no sirve para importar.",
+    "Suelta el XLS aquí tal cual: no hace falta abrirlo en Excel ni guardarlo como CSV.",
+    "La herramienta abre directamente en «Alegra (.xlsx)»: revisa los totales y descarga."
+  ],
+  "file": {
+    "delimiter": ";",
+    "decimalStyle": ",",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Fecha",
+        "Fecha movimiento",
+        "Fecha transacción"
+      ],
+      "description": [
+        "Descripción",
+        "Descripcion",
+        "Concepto",
+        "Detalle"
+      ],
+      "reference": [
+        "Referencia",
+        "Documento",
+        "Dcto.",
+        "Número de documento"
+      ],
+      "amount": [
+        "Valor",
+        "Valor transacción",
+        "Monto"
+      ],
+      "debit": [
+        "Débito",
+        "Debito",
+        "Retiros"
+      ],
+      "credit": [
+        "Crédito",
+        "Credito",
+        "Consignaciones"
+      ],
+      "balance": [
+        "Saldo",
+        "Saldo disponible"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Alegra solo importa extractos con su plantilla .xlsx (no CSV): columnas Fecha, Descripción y Monto en la hoja INGRESO DE DATOS.",
+    "Alegra rechaza descripciones con números o caracteres especiales, así que se eliminan: «TRANSFERENCIA A NEQUI 300*****21» queda «TRANSFERENCIA A NEQUI».",
+    "Los montos van como número con punto decimal y las salidas en negativo; Alegra detiene la importación si encuentra más de 20 errores.",
+    "El 4x1000 (GMF) y la cuota de manejo salen como movimientos propios, para que los concilies contra su cuenta de gasto."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "FECHA",
+      "targetHeader": "Fecha",
+      "transformationNote": "Fecha real de Excel con formato dd/mm/aaaa"
+    },
+    {
+      "sourceHeader": "DESCRIPCIÓN",
+      "targetHeader": "Descripción",
+      "transformationNote": "Sin números ni símbolos, como pide Alegra"
+    },
+    {
+      "sourceHeader": "VALOR",
+      "targetHeader": "Monto",
+      "transformationNote": "Número con punto decimal; negativo = salida"
+    },
+    {
+      "sourceHeader": "REFERENCIA",
+      "targetHeader": "(omitida)",
+      "transformationNote": "La plantilla de Alegra no la importa"
+    },
+    {
+      "sourceHeader": "SALDO",
+      "targetHeader": "(omitido)",
+      "transformationNote": "Se usa para la comprobación de saldos"
+    }
+  ],
+  "output": {
+    "profile": "excel-clean",
+    "accountingFile": "alegra",
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/bancolombia-a-alegra.csv",
+    "encoding": "windows-1252",
+    "synthetic": true
+  }
+}

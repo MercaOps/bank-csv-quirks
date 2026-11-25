@@ -1,0 +1,8 @@
+"Date","Time","TimeZone","Name","Type","Status","Currency","Gross","Fee","Net","From Email Address","To Email Address","Transaction ID","Balance"
+"03/01/2024","09:12:44","PST","Jane Buyer","Express Checkout Payment","Completed","USD","1,250.00","-43.80","1,206.20","jane@example.com","shop@example.com","5UX12345AB678901C","3,206.20"
+"03/02/2024","11:05:10","PST","","General Authorization","Pending","USD","-20.00","0.00","-20.00","","","7HD12345AB678901C","3,206.20"
+"03/04/2024","14:30:00","PST","ShipFast Labels","PreApproved Payment Bill User Payment","Completed","USD","-12.50","0.00","-12.50","shop@example.com","billing@shipfast.example","8KL12345AB678901C","3,193.70"
+"03/06/2024","08:45:21","PST","48213","Mobile Payment","Completed","USD","40.00","-1.46","38.54","","shop@example.com","9MN12345AB678901C","3,232.24"
+"03/07/2024","16:20:00","PST","Marco Rossi","Express Checkout Payment","Denied","USD","75.00","0.00","75.00","marco@example.com","shop@example.com","1PQ12345AB678901C","3,232.24"
+"03/09/2024","10:00:00","PST","","General Withdrawal","Completed","USD","-2,000.00","0.00","-2,000.00","","","2RS12345AB678901C","1,232.24"
+"03/12/2024","19:41:03","PST","Lena Fischer","Express Checkout Payment","Completed","USD","89.90","-3.43","86.47","lena@example.com","shop@example.com","3TU12345AB678901C","1,318.71"

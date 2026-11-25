@@ -1,0 +1,91 @@
+{
+  "id": "n26-to-ynab",
+  "lang": "en",
+  "source": "N26",
+  "target": "YNAB",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/n26-to-ynab/",
+  "howToExport": [
+    "Open N26 in a web browser; the CSV download is offered in the web app.",
+    "Select the account or Space, open Downloads and, under account activity, set the date range.",
+    "Choose CSV, download the file and drop it above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "auto",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Booking Date",
+        "Date",
+        "Buchungsdatum",
+        "Datum"
+      ],
+      "payee": [
+        "Partner Name",
+        "Payee",
+        "Empfänger"
+      ],
+      "memo": [
+        "Payment Reference",
+        "Payment reference",
+        "Verwendungszweck"
+      ],
+      "amount": [
+        "Amount (EUR)",
+        "Betrag (EUR)",
+        "Amount"
+      ]
+    },
+    "descriptionFrom": [
+      "payee"
+    ]
+  },
+  "knownQuirks": [
+    "N26 exports carry two dates, Booking Date and Value Date, and YNAB needs one. The preset uses the booking date, the day the transaction hit your account.",
+    "The counterparty is in Partner Name (Payee in older exports) and the purpose in Payment Reference; YNAB keeps them apart as Payee and Memo.",
+    "Card payments abroad are already converted to EUR, with the original amount and currency in separate columns; only the EUR amount is imported.",
+    "Header names and decimal style vary with the export version and language (English or German names, dot or comma); both are recognised."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Booking Date",
+      "targetHeader": "Date",
+      "transformationNote": "YYYY-MM-DD; Value Date ignored"
+    },
+    {
+      "sourceHeader": "Partner Name",
+      "targetHeader": "Payee",
+      "transformationNote": "Counterparty or merchant"
+    },
+    {
+      "sourceHeader": "Payment Reference",
+      "targetHeader": "Memo",
+      "transformationNote": "Purpose of the payment"
+    },
+    {
+      "sourceHeader": "Amount (EUR)",
+      "targetHeader": "Outflow / Inflow",
+      "transformationNote": "Split into positive Outflow and Inflow"
+    },
+    {
+      "sourceHeader": "Partner Iban / Type / Original Amount",
+      "targetHeader": "—",
+      "transformationNote": "Not needed by YNAB"
+    }
+  ],
+  "output": {
+    "profile": "ynab",
+    "accountingFile": null,
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "sample": {
+    "file": "samples/en/n26-to-ynab.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

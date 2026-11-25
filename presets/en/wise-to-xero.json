@@ -1,0 +1,102 @@
+{
+  "id": "wise-to-xero",
+  "lang": "en",
+  "source": "Wise",
+  "target": "Xero",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/wise-to-xero/",
+  "howToExport": [
+    "Sign in to Wise Business and open the currency balance that matches your Xero bank account.",
+    "Open its statements, select the period and choose CSV.",
+    "Download the file and drop it above; several months can be merged into one import."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "DMY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date",
+        "Fecha"
+      ],
+      "payee": [
+        "Payee Name",
+        "Payer Name",
+        "Merchant"
+      ],
+      "description": [
+        "Description"
+      ],
+      "reference": [
+        "TransferWise ID"
+      ],
+      "amount": [
+        "Amount"
+      ],
+      "currency": [
+        "Currency"
+      ],
+      "balance": [
+        "Running Balance"
+      ],
+      "fee": [
+        "Total fees",
+        "Comisiones totales"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Xero wants one Payee per line, but Wise spreads it over Payee Name (outgoing), Payer Name (incoming) and Merchant (card). The preset picks the filled one on each row.",
+    "Running Balance and the Exchange columns clutter Xero's import mapping and aren't needed for reconciliation; they're removed.",
+    "Wise fee lines and conversions between your own balances have no counterparty at all, so their Payee stays empty."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date",
+      "targetHeader": "Date",
+      "transformationNote": "DD/MM/YYYY"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Amount",
+      "transformationNote": "Single signed column, dot decimals"
+    },
+    {
+      "sourceHeader": "Payee Name / Payer Name / Merchant",
+      "targetHeader": "Payee",
+      "transformationNote": "First non-empty per row"
+    },
+    {
+      "sourceHeader": "Description",
+      "targetHeader": "Description",
+      "transformationNote": "Kept as Wise wrote it"
+    },
+    {
+      "sourceHeader": "TransferWise ID",
+      "targetHeader": "Reference",
+      "transformationNote": "Unique ID for tracing each line"
+    },
+    {
+      "sourceHeader": "Running Balance / Exchange Rate",
+      "targetHeader": "—",
+      "transformationNote": "Removed"
+    }
+  ],
+  "output": {
+    "profile": "xero",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/wise-to-xero.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

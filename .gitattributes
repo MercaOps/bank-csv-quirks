@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Samples keep their real line endings and encodings (CRLF, Windows-1252).
+samples/** -text

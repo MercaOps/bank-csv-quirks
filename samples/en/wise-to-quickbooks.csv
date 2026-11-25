@@ -1,0 +1,6 @@
+"TransferWise ID",Date,Amount,Currency,Description,"Payment Reference","Running Balance","Exchange From","Exchange To","Exchange Rate","Payer Name","Payee Name","Payee Account Number",Merchant,"Total fees"
+TRANSFER-981234567,02-04-2024,-1200.00,GBP,"Sent money to Oak Lettings Ltd","April rent",3800.00,,,,,"Oak Lettings Ltd",12345678,,0.00
+TRANSFER-981234890,03-04-2024,2450.00,GBP,"Received money from Acme GmbH with reference INV-1043","INV-1043",6250.00,EUR,GBP,0.8571,"Acme GmbH",,,,0.00
+CARD-1122334455,05-04-2024,-18.40,GBP,"Card transaction of 18.40 GBP issued by Pret A Manger",,6231.60,,,,,,,"Pret A Manger",0.00
+CARD-1122339988,08-04-2024,-54.99,GBP,"Card transaction of 63.00 EUR issued by Booking.com",,6176.61,GBP,EUR,1.1456,,,,"Booking.com",0.32
+BALANCE-556677,10-04-2024,-500.00,GBP,"Converted 500.00 GBP to 583.10 EUR",,5676.61,GBP,EUR,1.1662,,,,,1.87

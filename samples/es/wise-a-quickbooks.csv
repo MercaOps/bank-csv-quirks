@@ -1,0 +1,6 @@
+"TransferWise ID",Date,Amount,Currency,Description,"Payment Reference","Running Balance","Exchange From","Exchange To","Exchange Rate","Payer Name","Payee Name","Payee Account Number",Merchant,"Total fees"
+TRANSFER-981244100,02-04-2024,-850.00,EUR,"Sent money to Inmobiliaria Sol S.L.","Alquiler abril",4150.00,,,,,"Inmobiliaria Sol S.L.",ES7620770024003102575766,,0.00
+TRANSFER-981244377,04-04-2024,1800.00,EUR,"Received money from Studio Lumen with reference FAC-2024-031","FAC-2024-031",5950.00,,,,"Studio Lumen",,,,0.00
+CARD-1122441100,06-04-2024,-32.60,EUR,"Card transaction of 32.60 EUR issued by Mercadona",,5917.40,,,,,,,"Mercadona",0.00
+CARD-1122449900,09-04-2024,-41.27,EUR,"Card transaction of 35.00 GBP issued by Amazon UK",,5876.13,EUR,GBP,0.8481,,,,"Amazon UK",0.21
+BALANCE-778899,12-04-2024,-300.00,EUR,"Converted 300.00 EUR to 325.40 USD",,5576.13,EUR,USD,1.0847,,,,,1.12

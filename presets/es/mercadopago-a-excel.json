@@ -1,0 +1,116 @@
+{
+  "id": "mercadopago-a-excel",
+  "lang": "es",
+  "source": "Mercado Pago",
+  "target": "Excel",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/mercadopago-a-excel/",
+  "howToExport": [
+    "En tu cuenta de Mercado Pago, entra en la sección de reportes y elige el reporte de dinero liberado (liquidaciones).",
+    "Selecciona el periodo y genera el reporte en formato CSV.",
+    "Descárgalo cuando esté listo y suéltalo aquí."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "RECORD_TYPE",
+          "TIPO DE REGISTRO"
+        ],
+        "values": [
+          "initial_available_balance",
+          "total"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "DATE",
+        "FECHA"
+      ],
+      "description": [
+        "DESCRIPTION",
+        "DESCRIPCIÓN"
+      ],
+      "reference": [
+        "EXTERNAL_REFERENCE",
+        "SOURCE_ID",
+        "REFERENCIA EXTERNA"
+      ],
+      "credit": [
+        "NET_CREDIT_AMOUNT"
+      ],
+      "debit": [
+        "NET_DEBIT_AMOUNT"
+      ],
+      "gross": [
+        "GROSS_AMOUNT"
+      ],
+      "fee": [
+        "MP_FEE_AMOUNT"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "El reporte trae filas que no son movimientos: el saldo disponible inicial y el total del periodo (RECORD_TYPE initial_available_balance y total). Se excluyen para no duplicar importes.",
+    "El neto se reparte en dos columnas, NET_CREDIT_AMOUNT y NET_DEBIT_AMOUNT; el ajuste las combina en un neto con signo.",
+    "Las fechas incluyen hora y zona horaria (2024-03-02T10:15:22.000-03:00); se conserva la fecha de liberación, que es cuando el dinero afecta tu saldo.",
+    "La descripción llega como código (payment, shipping_cancel, tax_payment_ibex…) y se muestra en forma legible."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "DATE",
+      "targetHeader": "Fecha",
+      "transformationNote": "Fecha de liberación, sin hora ni zona"
+    },
+    {
+      "sourceHeader": "DESCRIPTION",
+      "targetHeader": "Descripción",
+      "transformationNote": "shipping_cancel → Shipping cancel"
+    },
+    {
+      "sourceHeader": "EXTERNAL_REFERENCE",
+      "targetHeader": "Referencia",
+      "transformationNote": "Tu número de pedido; si falta, SOURCE_ID"
+    },
+    {
+      "sourceHeader": "GROSS_AMOUNT",
+      "targetHeader": "Bruto",
+      "transformationNote": "Importe antes de deducciones"
+    },
+    {
+      "sourceHeader": "MP_FEE_AMOUNT",
+      "targetHeader": "Comisión",
+      "transformationNote": "Comisión de Mercado Pago o Mercado Libre"
+    },
+    {
+      "sourceHeader": "NET_CREDIT_AMOUNT / NET_DEBIT_AMOUNT",
+      "targetHeader": "Neto",
+      "transformationNote": "Crédito menos débito, con signo"
+    },
+    {
+      "sourceHeader": "RECORD_TYPE",
+      "targetHeader": "—",
+      "transformationNote": "Saldo inicial y total excluidos"
+    }
+  ],
+  "output": {
+    "profile": "excel-clean",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/mercadopago-a-excel.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "id": "paypal-to-xero",
+  "lang": "en",
+  "source": "PayPal",
+  "target": "Xero",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/paypal-to-xero/",
+  "howToExport": [
+    "Log in to PayPal on the web and go to Activity.",
+    "Click the Download icon and choose Custom; pick the date range (one request covers up to 12 months).",
+    "Select CSV as the format and keep the default fields (Date, Name, Type, Status, Currency, Gross, Fee, Net, Balance…).",
+    "Download the report once PayPal says it's ready (large ones take a while), then add it above."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "MDY",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "Status"
+        ],
+        "values": [
+          "Pending",
+          "Denied",
+          "Voided"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date"
+      ],
+      "payee": [
+        "Name"
+      ],
+      "description": [
+        "Type"
+      ],
+      "amount": [
+        "Net"
+      ],
+      "currency": [
+        "Currency"
+      ],
+      "reference": [
+        "Transaction ID"
+      ],
+      "balance": [
+        "Balance"
+      ],
+      "gross": [
+        "Gross",
+        "Bruto",
+        "Importe bruto"
+      ],
+      "fee": [
+        "Fee",
+        "Tarifa",
+        "Comisión"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "PayPal's Net column is what reaches your PayPal balance. With the gross/fee split on, a Gross line and a Fee line replace each Net line and still add up to it to the cent.",
+    "Pending, denied and voided rows are dropped using the Status column, so authorisations that never settled don't land in Xero.",
+    "A refund that returns part of the fee produces a positive fee line: the split works the fee out from Gross and Net, so PayPal's sign conventions don't matter.",
+    "Currency conversions show up as paired rows. If your file mixes currencies, pick one per import, as a Xero bank account holds a single currency."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Date",
+      "targetHeader": "Date",
+      "transformationNote": "PayPal's MM/DD/YYYY written as DD/MM/YYYY (changeable)"
+    },
+    {
+      "sourceHeader": "Name",
+      "targetHeader": "Payee",
+      "transformationNote": "Payer or merchant name"
+    },
+    {
+      "sourceHeader": "Type",
+      "targetHeader": "Description",
+      "transformationNote": "Express Checkout Payment, Payment Refund…"
+    },
+    {
+      "sourceHeader": "Net (or Gross + Fee)",
+      "targetHeader": "Amount",
+      "transformationNote": "Net amount; with the split on, separate gross and fee lines"
+    },
+    {
+      "sourceHeader": "Transaction ID",
+      "targetHeader": "Reference",
+      "transformationNote": "Kept to match the PayPal record"
+    }
+  ],
+  "output": {
+    "profile": "xero",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/paypal-to-xero.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

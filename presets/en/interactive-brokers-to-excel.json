@@ -1,0 +1,98 @@
+{
+  "id": "interactive-brokers-to-excel",
+  "lang": "en",
+  "source": "Interactive Brokers",
+  "target": "Excel",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/interactive-brokers-to-excel/",
+  "howToExport": [
+    "In the IBKR Portal, open the reports area and choose Statements → Activity.",
+    "Pick the period (monthly, yearly or custom dates) and CSV as the format.",
+    "Run and download the statement, then drop it above; choose a section in the Section menu."
+  ],
+  "file": {
+    "delimiter": ",",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "DataDiscriminator"
+        ],
+        "values": [
+          "ClosedLot"
+        ]
+      }
+    ],
+    "sectionFilter": "Trades",
+    "columns": {
+      "date": [
+        "Date/Time",
+        "Date",
+        "Settle Date"
+      ],
+      "description": [
+        "Symbol",
+        "Description"
+      ],
+      "amount": [
+        "Proceeds",
+        "Amount",
+        "Net Amount"
+      ]
+    },
+    "descriptionFrom": [
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "Every row starts with its section name and Header or Data, so one CSV holds dozens of tables with different columns; Excel shows it as one jagged sheet.",
+    "Trades include SubTotal and Total rows plus ClosedLot detail rows under closing trades. Summing Proceeds without removing them double-counts; the preset drops all three.",
+    "Trade times are written as «2024-01-15, 10:30:01», with a comma inside the date, which Excel treats as text; the preset keeps the date only.",
+    "Numbers mix integers and decimals from row to row; they're written uniformly so Excel sums and pivots work."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Section name / Header|Data",
+      "targetHeader": "—",
+      "transformationNote": "The first two columns of every row are removed"
+    },
+    {
+      "sourceHeader": "Date/Time",
+      "targetHeader": "Date/Time",
+      "transformationNote": "«2024-01-15, 10:30:01» → 2024-01-15"
+    },
+    {
+      "sourceHeader": "Symbol",
+      "targetHeader": "Symbol",
+      "transformationNote": "Kept as is"
+    },
+    {
+      "sourceHeader": "Quantity / T. Price",
+      "targetHeader": "Quantity / T. Price",
+      "transformationNote": "Uniform number format"
+    },
+    {
+      "sourceHeader": "Proceeds",
+      "targetHeader": "Proceeds",
+      "transformationNote": "Also used for the in/out totals"
+    },
+    {
+      "sourceHeader": "DataDiscriminator = ClosedLot",
+      "targetHeader": "—",
+      "transformationNote": "Detail rows dropped"
+    }
+  ],
+  "output": {
+    "profile": "excel-clean",
+    "accountingFile": null,
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "sample": {
+    "file": "samples/en/interactive-brokers-to-excel.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

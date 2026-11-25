@@ -1,0 +1,159 @@
+{
+  "id": "csv-a-iif",
+  "lang": "es",
+  "source": "CSV, Excel o .QBO",
+  "target": "QuickBooks Desktop .IIF",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/csv-a-iif/",
+  "howToExport": [
+    "Descarga el extracto del banco en CSV, Excel (.xls/.xlsx), .QBO, .OFX o .QIF: la herramienta los lee todos.",
+    "Suéltalo aquí y revisa la vista previa, los totales y la comprobación de saldo inicial y final.",
+    "Escribe los nombres exactos de la cuenta bancaria o de tarjeta y de las contrapartidas, tal como aparecen en tu plan de cuentas.",
+    "Descarga primero el archivo de prueba de 5 filas, impórtalo en una empresa con copia de seguridad y luego descarga el archivo completo."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": "auto",
+    "dateOrder": "auto",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": false,
+    "excludeRows": [
+      {
+        "columns": [
+          "Status",
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "Pending",
+          "Pendiente",
+          "Reverted",
+          "Declined",
+          "Rechazado"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Date",
+        "Transaction Date",
+        "Posting Date",
+        "Booking Date",
+        "Completed Date",
+        "Fecha",
+        "Fecha operación",
+        "Fecha de operación",
+        "Fecha valor",
+        "Fecha movimiento"
+      ],
+      "payee": [
+        "Payee",
+        "Name",
+        "Merchant",
+        "Beneficiario",
+        "Nombre",
+        "Comercio"
+      ],
+      "description": [
+        "Description",
+        "Details",
+        "Narrative",
+        "Memo",
+        "Concepto",
+        "Descripción",
+        "Detalle",
+        "Movimiento"
+      ],
+      "amount": [
+        "Amount",
+        "Net",
+        "Value",
+        "Importe",
+        "Monto",
+        "Valor",
+        "Cantidad"
+      ],
+      "debit": [
+        "Debit",
+        "Withdrawal",
+        "Money Out",
+        "Paid out",
+        "Cargo",
+        "Débito",
+        "Retiro",
+        "Egreso"
+      ],
+      "credit": [
+        "Credit",
+        "Deposit",
+        "Money In",
+        "Paid in",
+        "Abono",
+        "Crédito",
+        "Depósito",
+        "Ingreso"
+      ],
+      "reference": [
+        "Reference",
+        "Ref",
+        "Transaction ID",
+        "Referencia",
+        "Documento",
+        "Nº operación"
+      ],
+      "balance": [
+        "Balance",
+        "Running Balance",
+        "Saldo"
+      ],
+      "currency": [
+        "Currency",
+        "Moneda",
+        "Divisa"
+      ]
+    },
+    "descriptionFrom": [
+      "payee",
+      "description"
+    ]
+  },
+  "knownQuirks": [
+    "QuickBooks Desktop no permite deshacer una importación .IIF y crea una cuenta nueva con cualquier nombre que no reconozca: escribe los nombres tal cual están en tu plan de cuentas.",
+    "Cada movimiento es una línea TRNS más líneas SPL que deben sumar cero. La herramienta comprueba cada asiento al céntimo y no crea un archivo que no cuadre.",
+    "Las salidas se escriben como CHECK y las entradas como DEPOSIT (CREDIT CARD y CCARD REFUND en cuentas de tarjeta), como en los archivos de ejemplo de Intuit.",
+    "Las fechas van en M/D/AAAA, el formato de QuickBooks Desktop de EE. UU.; elige D/M/AAAA si tu edición es de Reino Unido o Canadá."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Fecha",
+      "targetHeader": "DATE",
+      "transformationNote": "M/D/AAAA, o D/M/AAAA para ediciones de Reino Unido y Canadá"
+    },
+    {
+      "sourceHeader": "Concepto / Beneficiario",
+      "targetHeader": "NAME",
+      "transformationNote": "Opcional: el beneficiario puede ir al MEMO para no crear nombres"
+    },
+    {
+      "sourceHeader": "Importe, o Cargo + Abono",
+      "targetHeader": "TRNS AMOUNT",
+      "transformationNote": "Importe con signo en tu cuenta bancaria o de tarjeta"
+    },
+    {
+      "sourceHeader": "(mismo importe, signo contrario)",
+      "targetHeader": "SPL AMOUNT",
+      "transformationNote": "En tu cuenta de contrapartida, para que el asiento cuadre"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": "iif",
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/csv-a-iif.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

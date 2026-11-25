@@ -1,0 +1,6 @@
+balance_transaction_id,created_utc,available_on_utc,currency,gross,fee,net,reporting_category,source_id,description,customer_email
+txn_3R4cA2BqwE,2024-05-01 10:15:00,2024-05-03 00:00:00,gbp,450.00,7.00,443.00,charge,ch_3R4cA2BqwE,Workshop ticket x3,priya@example.co.uk
+txn_3R4cA8DrtY,2024-05-02 16:42:31,2024-05-06 00:00:00,gbp,150.00,2.45,147.55,charge,ch_3R4cA8DrtY,Workshop ticket,tom@example.co.uk
+txn_3R4cB3FuiO,2024-05-04 09:00:00,2024-05-04 09:00:00,gbp,-150.00,0.00,-150.00,refund,re_3R4cB3FuiO,Refund: Workshop ticket,tom@example.co.uk
+txn_1R4cPAYasd,2024-05-07 00:06:00,2024-05-07 00:06:00,gbp,-440.55,0.00,-440.55,payout,po_1R4cPAYasd,STRIPE PAYOUT,
+txn_3R4cC6GhjK,2024-05-08 13:20:09,2024-05-10 00:00:00,gbp,95.00,1.58,93.42,charge,ch_3R4cC6GhjK,Online course access,ines@example.co.uk

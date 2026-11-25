@@ -1,0 +1,132 @@
+{
+  "id": "revolut-to-quickbooks",
+  "lang": "en",
+  "source": "Revolut",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/csv-cleaner/revolut-to-quickbooks/",
+  "howToExport": [
+    "In Revolut, pick the currency account you're bookkeeping: one QuickBooks bank account per Revolut currency keeps balances honest.",
+    "Open its Statement option, choose the spreadsheet format rather than PDF, and select the accounting period.",
+    "Download the CSV and drop it above; it needs no manual edits first."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": true,
+    "excludeRows": [
+      {
+        "columns": [
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "PENDING",
+          "REVERTED",
+          "DECLINED",
+          "FAILED",
+          "PENDIENTE",
+          "REVERTIDO",
+          "RECHAZADO",
+          "FALLIDO"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Completed Date",
+        "Fecha de finalización",
+        "Fecha de completado",
+        "Started Date",
+        "Fecha de inicio"
+      ],
+      "description": [
+        "Description",
+        "Descripción"
+      ],
+      "memo": [
+        "Type",
+        "Tipo"
+      ],
+      "amount": [
+        "Amount",
+        "Importe",
+        "Cantidad"
+      ],
+      "fee": [
+        "Fee",
+        "Comisión",
+        "Tarifa"
+      ],
+      "currency": [
+        "Currency",
+        "Divisa",
+        "Moneda"
+      ],
+      "balance": [
+        "Balance",
+        "Saldo"
+      ]
+    },
+    "descriptionFrom": [
+      "description",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "The Type column (CARD_PAYMENT, TOPUP, TRANSFER, EXCHANGE…) carries the context QuickBooks bank rules need, but in shouting case; the preset appends it to the description as readable text.",
+    "Top-ups from your own bank look like income in the CSV; in QuickBooks they should be matched as transfers, not recorded as sales.",
+    "Each currency exchange creates a row in each currency. With one QuickBooks account per currency, upload each side to its own account by picking the currency in the selector.",
+    "Started Date and Completed Date both include a time; QuickBooks wants one plain date column, so the settled Completed Date is used."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Completed Date",
+      "targetHeader": "Date",
+      "transformationNote": "Converted to MM/DD/YYYY, time dropped"
+    },
+    {
+      "sourceHeader": "Description",
+      "targetHeader": "Description",
+      "transformationNote": "First half of the description"
+    },
+    {
+      "sourceHeader": "Type",
+      "targetHeader": "Description",
+      "transformationNote": "Humanized and appended: «Adobe Creative Cloud – Card payment»"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Amount",
+      "transformationNote": "Signed amount with plain dot decimals"
+    },
+    {
+      "sourceHeader": "Fee",
+      "targetHeader": "Amount",
+      "transformationNote": "Subtracted so QuickBooks matches the Revolut balance"
+    },
+    {
+      "sourceHeader": "State",
+      "targetHeader": "—",
+      "transformationNote": "Only COMPLETED rows are kept"
+    },
+    {
+      "sourceHeader": "Product / Balance / Currency",
+      "targetHeader": "—",
+      "transformationNote": "Not part of QuickBooks' 3-column format"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "MM/DD/YYYY"
+  },
+  "sample": {
+    "file": "samples/en/revolut-to-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}

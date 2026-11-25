@@ -1,0 +1,132 @@
+{
+  "id": "revolut-a-quickbooks",
+  "lang": "es",
+  "source": "Revolut",
+  "target": "QuickBooks Online",
+  "cleanerUrl": "https://mercaops.com/es/limpiar-csv-bancario/revolut-a-quickbooks/",
+  "howToExport": [
+    "En Revolut, elige la cuenta de la divisa que vas a contabilizar: una cuenta bancaria de QuickBooks por cada divisa mantiene los saldos cuadrados.",
+    "Abre su opción de Extracto, elige el formato de hoja de cálculo en lugar de PDF y el periodo contable.",
+    "Descarga el CSV y suéltalo aquí; no necesita retoques previos."
+  ],
+  "file": {
+    "delimiter": "auto",
+    "decimalStyle": ".",
+    "dateOrder": "YMD",
+    "skipTopRows": 0,
+    "moneyOutIsPositive": false,
+    "feeAlreadySubtracted": true,
+    "excludeRows": [
+      {
+        "columns": [
+          "State",
+          "Estado"
+        ],
+        "values": [
+          "PENDING",
+          "REVERTED",
+          "DECLINED",
+          "FAILED",
+          "PENDIENTE",
+          "REVERTIDO",
+          "RECHAZADO",
+          "FALLIDO"
+        ]
+      }
+    ],
+    "sectionFilter": null,
+    "columns": {
+      "date": [
+        "Completed Date",
+        "Fecha de finalización",
+        "Fecha de completado",
+        "Started Date",
+        "Fecha de inicio"
+      ],
+      "description": [
+        "Description",
+        "Descripción"
+      ],
+      "memo": [
+        "Type",
+        "Tipo"
+      ],
+      "amount": [
+        "Amount",
+        "Importe",
+        "Cantidad"
+      ],
+      "fee": [
+        "Fee",
+        "Comisión",
+        "Tarifa"
+      ],
+      "currency": [
+        "Currency",
+        "Divisa",
+        "Moneda"
+      ],
+      "balance": [
+        "Balance",
+        "Saldo"
+      ]
+    },
+    "descriptionFrom": [
+      "description",
+      "memo"
+    ]
+  },
+  "knownQuirks": [
+    "La columna Type (CARD_PAYMENT, TOPUP, TRANSFER, EXCHANGE…) aporta el contexto que necesitan las reglas bancarias de QuickBooks, pero en mayúsculas; el ajuste la añade a la descripción de forma legible.",
+    "Las recargas desde tu propio banco parecen ingresos en el CSV; en QuickBooks deben conciliarse como transferencias, no como ventas.",
+    "Cada cambio de divisa crea una fila en cada moneda. Con una cuenta de QuickBooks por divisa, sube cada lado a su cuenta eligiendo la moneda en el selector.",
+    "Started Date y Completed Date incluyen la hora; QuickBooks quiere una sola fecha, así que se usa la de liquidación (Completed Date)."
+  ],
+  "columnMapping": [
+    {
+      "sourceHeader": "Completed Date",
+      "targetHeader": "Date",
+      "transformationNote": "DD/MM/AAAA, sin hora"
+    },
+    {
+      "sourceHeader": "Description",
+      "targetHeader": "Description",
+      "transformationNote": "Primera parte de la descripción"
+    },
+    {
+      "sourceHeader": "Type",
+      "targetHeader": "Description",
+      "transformationNote": "Legible y añadido: «Movistar Fibra – Card payment»"
+    },
+    {
+      "sourceHeader": "Amount",
+      "targetHeader": "Amount",
+      "transformationNote": "Importe con signo y punto decimal"
+    },
+    {
+      "sourceHeader": "Fee",
+      "targetHeader": "Amount",
+      "transformationNote": "Se resta para que QuickBooks cuadre con el saldo de Revolut"
+    },
+    {
+      "sourceHeader": "State",
+      "targetHeader": "—",
+      "transformationNote": "Solo se conservan las filas COMPLETED"
+    },
+    {
+      "sourceHeader": "Product / Balance / Currency",
+      "targetHeader": "—",
+      "transformationNote": "No forman parte del formato de 3 columnas"
+    }
+  ],
+  "output": {
+    "profile": "qbo-3col",
+    "accountingFile": null,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  "sample": {
+    "file": "samples/es/revolut-a-quickbooks.csv",
+    "encoding": "utf-8",
+    "synthetic": true
+  }
+}
